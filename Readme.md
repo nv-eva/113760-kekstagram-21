@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Наталия Васильева](https://up.htmlacademy.ru/javascript/21/user/113760).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Глазков](https://up.htmlacademy.ru/javascript/21/user/1194253).
 
 ---
 
