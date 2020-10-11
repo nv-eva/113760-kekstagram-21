@@ -18,21 +18,25 @@ const photosIndex = Array(COUNT_PHOTOS).fill().map((e, i) => i + 1);
 const generatePhoto = function () {
   const photo = {};
 
+  const generateMessage = function () {
+    let message = getRandomElement(USER_MESSAGES);
+    if (Math.random() > 0.5) {
+      message += ` ` + getRandomElement(USER_MESSAGES);
+    }
+    return (message);
+  };
+
+  const generateComments = (countComments) =>
+    (new Array(countComments)).fill(``).map(generateMessage);
+
   photo.url = String(`photos/` + photosIndex[0] + `.jpg`);
   photosIndex.shift();
 
   photo.description = ` `;
+  photo.comments = generateComments(getRandomIndex(0, 30));
   photo.likes = getRandomIndex(15, 200);
   photo.name = getRandomElement(USER_NAMES);
   photo.avatar = String(`img/avatar-` + getRandomIndex(1, 6) + `.svg`);
-
-  photo.comments = Array(getRandomIndex(0, 30));
-
-  if (Math.random() > 0.5) {
-    const message = getRandomElement(USER_MESSAGES);
-  } else {
-    const message = getRandomElement(USER_MESSAGES) + ` ` + getRandomElement(USER_MESSAGES);
-  }
 
   return (photo);
 };
