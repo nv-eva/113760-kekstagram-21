@@ -4,7 +4,7 @@ const USER_NAMES = [`Иван`, `Хуан`, `Себастьян`, `Мария`, 
 const USER_MESSAGES = [`Всё отлично!`, `В целом всё неплохо. Но не всё.`, `Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.`, `Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.`, `Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.`, `Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!`];
 const COUNT_PHOTOS = 25;
 
-// 1. Создает массив фотографий с описаниями
+// 1.1. Создает массив фотографий с описаниями
 const getRandomIndex = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
@@ -47,7 +47,7 @@ const generatePhotos = (countPhotos) =>
 const photos = generatePhotos(COUNT_PHOTOS);
 
 
-// 2. Создает DOM-элементы на основе массива и шаблона
+// 1.2. Создает DOM-элементы на основе массива и шаблона
 const photoListElement = document.querySelector(`.pictures`);
 const photoTemplate = document.querySelector(`#picture`).content.querySelector(`.picture`);
 
@@ -60,9 +60,40 @@ const renderPhoto = function (photo) {
 };
 
 
-// 3. Вставляет сгенерированные элементы в документ
+// 1.3. Вставляет сгенерированные элементы в документ
 const fragment = document.createDocumentFragment();
 for (let i = 0; i < photos.length; i++) {
   fragment.appendChild(renderPhoto(photos[i]));
 }
 photoListElement.appendChild(fragment);
+
+
+// 2.1. Показывает элемент big-picture
+const bigPicture = document.querySelector(`.big-picture`);
+bigPicture.classList.remove(`hidden`);
+
+bigPicture.querySelector(`.big-picture__img`).children.src = photos[0].url;
+bigPicture.querySelector(`.likes-count`).textContent = photos[0].likes;
+bigPicture.querySelector(`.comments-count`).textContent = photos[0].comments.length;
+
+/*
+url подставьте как src изображения внутри .big-picture__img
+
+комментарии должны вставляться в блок .social__comments.
+Разметка каждого комментария должна выглядеть так:
+
+description вставьте строкой в блок .social__caption
+
+*/
+
+// 2.2. Прячет блоки счетчика комментариев и загрузки новых комментариев
+/*
+Спрячьте блоки счётчика комментариев .social__comment-count
+и загрузки новых комментариев .comments-loader, добавив им класс hidden
+*/
+
+// 2.3. Добавляет body класс modal-open
+/*
+Добавьте на <body> класс modal-open,
+чтобы контейнер с фотографиями позади не прокручивался при скролле.
+*/
