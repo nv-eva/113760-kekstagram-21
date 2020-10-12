@@ -75,23 +75,21 @@ bigPicture.classList.remove(`hidden`);
 bigPicture.querySelector(`.big-picture__img`).children.src = photos[0].url;
 bigPicture.querySelector(`.likes-count`).textContent = photos[0].likes;
 bigPicture.querySelector(`.comments-count`).textContent = photos[0].comments.length;
-bigPicture.querySelector(`.social__caption`).textContent = photos[0].description;
 
 /*
-url подставьте как src изображения внутри .big-picture__img
-
 комментарии должны вставляться в блок .social__comments.
 Разметка каждого комментария должна выглядеть так:
-
-description вставьте строкой в блок .social__caption
-
 */
+
+bigPicture.querySelector(`.social__caption`).textContent = photos[0].description;
+
 
 // 2.2. Прячет блоки счетчика комментариев и загрузки новых комментариев
-/*
-Спрячьте блоки счётчика комментариев .social__comment-count
-и загрузки новых комментариев .comments-loader, добавив им класс hidden
-*/
+const counterComments = bigPicture.querySelector(`.social__comment-count`);
+counterComments.classList.add(`hidden`);
+
+const loaderComments = bigPicture.querySelector(`.comments-loader`);
+loaderComments.classList.add(`hidden`);
 
 // 2.3. Добавляет body класс modal-open
 /*
