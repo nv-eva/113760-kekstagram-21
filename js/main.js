@@ -26,17 +26,23 @@ const generatePhoto = function () {
     return (message);
   };
 
+  const generateComment = function () {
+    const comment = {};
+    comment.avatar = String(`img/avatar-` + getRandomIndex(1, 6) + `.svg`);
+    comment.message = generateMessage();
+    comment.name = getRandomElement(USER_NAMES);
+    return (comment);
+  };
+
   const generateComments = (countComments) =>
-    (new Array(countComments)).fill(``).map(generateMessage);
+    (new Array(countComments)).fill(``).map(generateComment);
 
   photo.url = String(`photos/` + photosIndex[0] + `.jpg`);
   photo.description = String(`Описание к фотографии ` + photosIndex[0]);
-  photosIndex.shift();
-
-  photo.comments = generateComments(getRandomIndex(0, 30));
   photo.likes = getRandomIndex(15, 200);
-  photo.name = getRandomElement(USER_NAMES);
-  photo.avatar = String(`img/avatar-` + getRandomIndex(1, 6) + `.svg`);
+  photo.comments = generateComments(getRandomIndex(0, 30));
+
+  photosIndex.shift();
 
   return (photo);
 };
@@ -75,14 +81,27 @@ bigPicture.classList.remove(`hidden`);
 bigPicture.querySelector(`.big-picture__img`).children.src = photos[0].url;
 bigPicture.querySelector(`.likes-count`).textContent = photos[0].likes;
 bigPicture.querySelector(`.comments-count`).textContent = photos[0].comments.length;
-
-/*
-комментарии должны вставляться в блок .social__comments.
-Разметка каждого комментария должна выглядеть так:
-*/
-
 bigPicture.querySelector(`.social__caption`).textContent = photos[0].description;
 
+// Добавляет комментарии
+/*
+const commentsList = bigPicture.querySelector(`.social__comments`);
+const commentsItem = bigPicture.querySelector(`.social__comment`);
+
+const renderComment = function (comments) {
+  const comment = commentsItem.cloneNode(true);
+  comment.querySelector(`.social__picture`).src = comments.avatar;
+  comment.querySelector(`.social__picture`).alt = comments.name;
+  comment.querySelector(`.social__text`).textContent = comments.message;
+  return comment;
+};
+
+const fragment = document.createDocumentFragment();
+for (let i = 0; i < photos[0].comments.length; i++) {
+  fragment.appendChild(renderComment(photos[0].comments));
+}
+commentsList.appendChild(fragment);
+*/
 
 // 2.2. Прячет блоки счетчика комментариев и загрузки новых комментариев
 const counterComments = bigPicture.querySelector(`.social__comment-count`);
