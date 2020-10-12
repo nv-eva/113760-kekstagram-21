@@ -40,7 +40,7 @@ const generatePhoto = function () {
   photo.url = String(`photos/` + photosIndex[0] + `.jpg`);
   photo.description = String(`Описание к фотографии ` + photosIndex[0]);
   photo.likes = getRandomIndex(15, 200);
-  photo.comments = generateComments(getRandomIndex(0, 30));
+  photo.comments = generateComments(getRandomIndex(0, 15));
 
   photosIndex.shift();
 
@@ -78,30 +78,27 @@ photoListElement.appendChild(fragment);
 const bigPicture = document.querySelector(`.big-picture`);
 bigPicture.classList.remove(`hidden`);
 
-bigPicture.querySelector(`.big-picture__img`).children.src = photos[0].url;
+bigPicture.querySelector(`.big-picture__img img`).src = photos[0].url;
 bigPicture.querySelector(`.likes-count`).textContent = photos[0].likes;
 bigPicture.querySelector(`.comments-count`).textContent = photos[0].comments.length;
 bigPicture.querySelector(`.social__caption`).textContent = photos[0].description;
 
-// Добавляет комментарии
-/*
 const commentsList = bigPicture.querySelector(`.social__comments`);
 const commentsItem = bigPicture.querySelector(`.social__comment`);
 
-const renderComment = function (comments) {
-  const comment = commentsItem.cloneNode(true);
-  comment.querySelector(`.social__picture`).src = comments.avatar;
-  comment.querySelector(`.social__picture`).alt = comments.name;
-  comment.querySelector(`.social__text`).textContent = comments.message;
-  return comment;
+const renderComment = function (comment) {
+  const photoComment = commentsItem.cloneNode(true);
+  photoComment.querySelector(`.social__picture`).src = comment.avatar;
+  photoComment.querySelector(`.social__picture`).alt = comment.name;
+  photoComment.querySelector(`.social__text`).textContent = comment.message;
+  return photoComment;
 };
 
-const fragment = document.createDocumentFragment();
-for (let i = 0; i < photos[0].comments.length; i++) {
-  fragment.appendChild(renderComment(photos[0].comments));
+for (let j = 0; j < photos[0].comments.length; j++) {
+  const comment = renderComment(photos[0].comments[j]);
+  commentsList.appendChild(comment);
 }
-commentsList.appendChild(fragment);
-*/
+
 
 // 2.2. Прячет блоки счетчика комментариев и загрузки новых комментариев
 const counterComments = bigPicture.querySelector(`.social__comment-count`);
