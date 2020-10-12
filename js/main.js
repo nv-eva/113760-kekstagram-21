@@ -30,9 +30,9 @@ const generatePhoto = function () {
     (new Array(countComments)).fill(``).map(generateMessage);
 
   photo.url = String(`photos/` + photosIndex[0] + `.jpg`);
+  photo.description = String(`Описание к фотографии ` + photosIndex[0]);
   photosIndex.shift();
 
-  photo.description = ` `;
   photo.comments = generateComments(getRandomIndex(0, 30));
   photo.likes = getRandomIndex(15, 200);
   photo.name = getRandomElement(USER_NAMES);
@@ -75,6 +75,7 @@ bigPicture.classList.remove(`hidden`);
 bigPicture.querySelector(`.big-picture__img`).children.src = photos[0].url;
 bigPicture.querySelector(`.likes-count`).textContent = photos[0].likes;
 bigPicture.querySelector(`.comments-count`).textContent = photos[0].comments.length;
+bigPicture.querySelector(`.social__caption`).textContent = photos[0].description;
 
 /*
 url подставьте как src изображения внутри .big-picture__img
