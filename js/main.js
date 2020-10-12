@@ -91,8 +91,7 @@ counterComments.classList.add(`hidden`);
 const loaderComments = bigPicture.querySelector(`.comments-loader`);
 loaderComments.classList.add(`hidden`);
 
+
 // 2.3. Добавляет body класс modal-open
-/*
-Добавьте на <body> класс modal-open,
-чтобы контейнер с фотографиями позади не прокручивался при скролле.
-*/
+const body = document.querySelector(`body`);
+body.classList.add(`modal-open`);
