@@ -110,4 +110,62 @@ loaderComments.classList.add(`hidden`);
 
 // 2.3. Добавляет body класс modal-open
 const body = document.querySelector(`body`);
-body.classList.add(`modal-open`);
+
+const fixBody = function () {
+  body.classList.add(`modal-open`);
+};
+
+const unfixBody = function () {
+  body.classList.remove(`hidden`);
+};
+
+
+// 1.1. Показывает и скрывает окно загрузки фото
+const imageUpload = document.querySelector(`.img-upload`);
+const imageUploadOverlay = imageUpload.querySelector(`.img-upload__overlay`);
+const uploadOpenFile = imageUpload.querySelector(`#upload-file`);
+const uploadCancel = imageUpload.querySelector(`#upload-cancel`);
+
+const onPopupEscPress = function (evt) {
+  if (evt.key === `Escape`) {
+    evt.preventDefault();
+    closeUpload();
+  }
+};
+
+// Показывает
+// Надо доработать: открытие файла через изменения значения поля #upload-file
+const openUpload = function () {
+  imageUploadOverlay.classList.remove(`hidden`);
+  document.addEventListener(`keydown`, onPopupEscPress);
+  fixBody();
+};
+
+uploadOpenFile.addEventListener(`click`, function (evt) {
+  evt.preventDefault();
+  openUpload();
+});
+
+uploadOpenFile.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    evt.preventDefault();
+    openUpload();
+  }
+});
+
+// Скрывает
+const closeUpload = function () {
+  imageUploadOverlay.classList.add(`hidden`);
+  document.removeEventListener(`keydown`, onPopupEscPress);
+  unfixBody();
+};
+
+uploadCancel.addEventListener(`click`, function () {
+  closeUpload();
+});
+
+uploadCancel.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    closeUpload();
+  }
+});
