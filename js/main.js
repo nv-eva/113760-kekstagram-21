@@ -169,3 +169,60 @@ uploadCancel.addEventListener(`keydown`, function (evt) {
     closeUpload();
   }
 });
+
+// 1.2. Изменение размера изображения
+const scaleControlSmaller = imageUpload.querySelector(`.scale__control--smaller`);
+const scaleControlBigger = imageUpload.querySelector(`.scale__control--bigger`);
+const scaleControlValue = imageUpload.querySelector(`.scale__control--value`);
+// const imageUploadPreview = imageUpload.querySelector(`.img-upload__preview img`);
+
+const SCALE_STEP = 25;
+let scaleStep = SCALE_STEP * 0.01;
+let scaleValue = 1;
+scaleControlValue.value = (scaleValue) * 100 + `%`;
+
+const renderScaleControlValue = function () {
+  scaleControlValue.value = (scaleValue) * 100 + `%`;
+};
+
+const checkScaleControls = function () {
+  if (scaleValue <= 0.25) {
+    scaleControlSmaller.disabled = true;
+    scaleControlSmaller.classList.add(`scale__control--disabled`);
+  } else {
+    scaleControlSmaller.disabled = false;
+    scaleControlSmaller.classList.remove(`scale__control--disabled`);
+  }
+
+  if (scaleValue >= 1) {
+    scaleControlBigger.disabled = true;
+    scaleControlBigger.classList.add(`scale__control--disabled`);
+  } else {
+    scaleControlBigger.disabled = false;
+    scaleControlBigger.classList.remove(`scale__control--disabled`);
+  }
+};
+
+const scaleSmaller = function () {
+  if (scaleValue - scaleStep >= 0.25) {
+    scaleValue -= scaleStep;
+  }
+  renderScaleControlValue();
+};
+
+const scaleBigger = function () {
+  if (scaleValue + scaleStep <= 1) {
+    scaleValue += scaleStep;
+  }
+  renderScaleControlValue();
+};
+
+scaleControlSmaller.addEventListener(`click`, function () {
+  scaleSmaller();
+  checkScaleControls();
+});
+
+scaleControlBigger.addEventListener(`click`, function () {
+  scaleBigger();
+  checkScaleControls();
+});
