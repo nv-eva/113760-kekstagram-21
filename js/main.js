@@ -76,7 +76,7 @@ photoListElement.appendChild(fragment);
 
 // 2.1. Показывает элемент big-picture
 const bigPicture = document.querySelector(`.big-picture`);
-bigPicture.classList.remove(`hidden`);
+// bigPicture.classList.remove(`hidden`);
 
 bigPicture.querySelector(`.big-picture__img img`).src = photos[0].url;
 bigPicture.querySelector(`.likes-count`).textContent = photos[0].likes;
