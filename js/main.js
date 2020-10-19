@@ -139,10 +139,14 @@ const openUpload = function () {
   imageUploadOverlay.classList.remove(`hidden`);
   document.addEventListener(`keydown`, onPopupEscPress);
   fixBody();
-  // Прописывает загруженному изображению рамер 100%
+  // Прописывает загруженному превью изображения рамер 100%
   renderScaleControlValue();
   renderImageScale();
   checkScaleControls();
+  // Сбрасывает с превью изображения все эффекты
+  removeAllImageEffecs();
+  imageUploadPreview.classList.add(`effects__preview--none`);
+  uploadEffectLevel.classList.add(`hidden`);
 };
 
 uploadOpenFile.addEventListener(`click`, function (evt) {
@@ -175,7 +179,7 @@ uploadCancel.addEventListener(`keydown`, function (evt) {
 });
 
 
-// 1.2. Изменение размера изображения
+// 1.2. Редактирование размера изображения
 const scaleControlSmaller = imageUpload.querySelector(`.scale__control--smaller`);
 const scaleControlBigger = imageUpload.querySelector(`.scale__control--bigger`);
 const scaleControlValue = imageUpload.querySelector(`.scale__control--value`);
@@ -252,3 +256,28 @@ scaleControlValue.addEventListener(`keydown`, function (evt) {
     checkScaleControls();
   }
 });
+
+// 1.2. Применение эффекта для изображения
+const imageUploadForm = document.querySelector(`.img-upload__form`);
+const uploadEffectLevel = document.querySelector(`.img-upload__effect-level`);
+
+const removeAllImageEffecs = function () {
+  const Effects = imageUploadForm.querySelectorAll(`input[type="radio"]`);
+  Effects.forEach((item, i) => {
+    imageUploadPreview.classList.remove(`effects__preview--` + Effects[i].value);
+  });
+};
+
+const effectsChangeHandler = function (evt) {
+  if (evt.target.matches(`input[type="radio"]`)) {
+    removeAllImageEffecs();
+    imageUploadPreview.classList.add(`effects__preview--` + evt.target.value);
+    if (evt.target.value == `none`) {
+      uploadEffectLevel.classList.add(`hidden`);
+    } else {
+      uploadEffectLevel.classList.remove(`hidden`);
+    }
+  }
+};
+
+imageUploadForm.addEventListener(`change`, effectsChangeHandler);
