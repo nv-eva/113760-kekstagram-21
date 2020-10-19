@@ -116,11 +116,11 @@ const fixBody = function () {
 };
 
 const unfixBody = function () {
-  body.classList.remove(`hidden`);
+  body.classList.remove(`modal-open`);
 };
 
 
-// 1.1. Показывает и скрывает окно загрузки фото
+// Обработка загруженных фотографий
 const imageUpload = document.querySelector(`.img-upload`);
 const imageUploadOverlay = imageUpload.querySelector(`.img-upload__overlay`);
 const uploadOpenFile = imageUpload.querySelector(`#upload-file`);
@@ -133,12 +133,16 @@ const onPopupEscPress = function (evt) {
   }
 };
 
-// Показывает
+// 1.1. Показывает окно загрузки фото
 // Надо доработать: открытие файла через изменения значения поля #upload-file
 const openUpload = function () {
   imageUploadOverlay.classList.remove(`hidden`);
   document.addEventListener(`keydown`, onPopupEscPress);
   fixBody();
+  // Прописывает загруженному изображению рамер 100%
+  renderScaleControlValue();
+  renderImageScale();
+  checkScaleControls();
 };
 
 uploadOpenFile.addEventListener(`click`, function (evt) {
@@ -153,7 +157,7 @@ uploadOpenFile.addEventListener(`keydown`, function (evt) {
   }
 });
 
-// Скрывает
+// 1.1. Скрывает окно загрузки фото
 const closeUpload = function () {
   imageUploadOverlay.classList.add(`hidden`);
   document.removeEventListener(`keydown`, onPopupEscPress);
@@ -170,23 +174,29 @@ uploadCancel.addEventListener(`keydown`, function (evt) {
   }
 });
 
+
 // 1.2. Изменение размера изображения
 const scaleControlSmaller = imageUpload.querySelector(`.scale__control--smaller`);
 const scaleControlBigger = imageUpload.querySelector(`.scale__control--bigger`);
 const scaleControlValue = imageUpload.querySelector(`.scale__control--value`);
-// const imageUploadPreview = imageUpload.querySelector(`.img-upload__preview img`);
+const imageUploadPreview = imageUpload.querySelector(`.img-upload__preview img`);
 
+const MIN_SCALE = 25;
+const MAX_SCALE = 100;
 const SCALE_STEP = 25;
 let scaleStep = SCALE_STEP * 0.01;
 let scaleValue = 1;
-scaleControlValue.value = (scaleValue) * 100 + `%`;
 
 const renderScaleControlValue = function () {
   scaleControlValue.value = (scaleValue) * 100 + `%`;
 };
 
+const renderImageScale = function () {
+  imageUploadPreview.style.transform = `scale(` + scaleValue + `)`;
+};
+
 const checkScaleControls = function () {
-  if (scaleValue <= 0.25) {
+  if (scaleValue <= MIN_SCALE * 0.01) {
     scaleControlSmaller.disabled = true;
     scaleControlSmaller.classList.add(`scale__control--disabled`);
   } else {
@@ -194,7 +204,7 @@ const checkScaleControls = function () {
     scaleControlSmaller.classList.remove(`scale__control--disabled`);
   }
 
-  if (scaleValue >= 1) {
+  if (scaleValue >= MAX_SCALE * 0.01) {
     scaleControlBigger.disabled = true;
     scaleControlBigger.classList.add(`scale__control--disabled`);
   } else {
@@ -204,17 +214,19 @@ const checkScaleControls = function () {
 };
 
 const scaleSmaller = function () {
-  if (scaleValue - scaleStep >= 0.25) {
+  if (scaleValue - scaleStep >= MIN_SCALE * 0.01) {
     scaleValue -= scaleStep;
+    renderScaleControlValue();
+    renderImageScale();
   }
-  renderScaleControlValue();
 };
 
 const scaleBigger = function () {
-  if (scaleValue + scaleStep <= 1) {
+  if (scaleValue + scaleStep <= MAX_SCALE * 0.01) {
     scaleValue += scaleStep;
+    renderScaleControlValue();
+    renderImageScale();
   }
-  renderScaleControlValue();
 };
 
 scaleControlSmaller.addEventListener(`click`, function () {
@@ -225,4 +237,18 @@ scaleControlSmaller.addEventListener(`click`, function () {
 scaleControlBigger.addEventListener(`click`, function () {
   scaleBigger();
   checkScaleControls();
+});
+
+scaleControlValue.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `ArrowLeft`) {
+    scaleSmaller();
+    checkScaleControls();
+  }
+});
+
+scaleControlValue.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `ArrowRight`) {
+    scaleBigger();
+    checkScaleControls();
+  }
 });
