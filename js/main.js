@@ -322,15 +322,18 @@ imageUploadForm.addEventListener(`change`, effectsChangeHandler);
 // 1.3. Валидация хэштегов и комментариев
 const textHashtags = imageUploadForm.querySelector(`.text__hashtags`);
 const textDescription = imageUploadForm.querySelector(`.text__description`);
+const uploadSubmit = imageUploadForm.querySelector(`#upload-submit`);
 const MAX_HASHTAGS_COUNT = 5;
 const MAX_DESCRIPTION_LENGTH = 140;
 
-textHashtags.addEventListener(`input`, function () {
+const validationHashtags = function () {
   const hashtags = textHashtags.value.split(` `);
   const regularHashtag = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
 
   if (hashtags.length > MAX_HASHTAGS_COUNT) {
     textHashtags.setCustomValidity(`Используйте не более ` + MAX_HASHTAGS_COUNT + ` хэш-тегов`);
+  } else if ((new Set(hashtags)).size < hashtags.lenght) {
+    textHashtags.setCustomValidity(`Хэш-теги не должны повторяться`);
   } else {
     hashtags.forEach((item, i) => {
       if (!regularHashtag.test(hashtags[i])) {
@@ -342,6 +345,20 @@ textHashtags.addEventListener(`input`, function () {
   }
 
   textHashtags.reportValidity();
+};
+
+textHashtags.addEventListener(`input`, function () {
+  validationHashtags();
+});
+
+uploadSubmit.addEventListener(`click`, function () {
+  validationHashtags();
+});
+
+uploadSubmit.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    validationHashtags();
+  }
 });
 
 textDescription.addEventListener(`input`, function () {
