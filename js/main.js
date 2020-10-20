@@ -336,7 +336,7 @@ const validationHashtags = function () {
     textHashtags.setCustomValidity(`Хэш-теги не должны повторяться`);
   } else {
     hashtags.forEach((item, i) => {
-      if (!regularHashtag.test(hashtags[i])) {
+      if (!regularHashtag.test(hashtags[i]) && textHashtags.value !== ``) {
         textHashtags.setCustomValidity(`Введите корректный хэш-тег`);
       } else {
         textHashtags.setCustomValidity(``);
