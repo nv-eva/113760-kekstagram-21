@@ -125,7 +125,6 @@ const imageUpload = document.querySelector(`.img-upload`);
 const imageUploadOverlay = imageUpload.querySelector(`.img-upload__overlay`);
 const uploadOpenFile = imageUpload.querySelector(`#upload-file`);
 const uploadCancel = imageUpload.querySelector(`#upload-cancel`);
-const textDescription = imageUpload.querySelector(`.text__description`);
 
 const onPopupEscPress = function (evt) {
   if (evt.key === `Escape`
@@ -309,5 +308,29 @@ const effectsChangeHandler = function (evt) {
 imageUploadForm.addEventListener(`change`, effectsChangeHandler);
 
 
-// 1.3. Валидация хэштегов
+// 1.3. Валидация хэштегов и комментариев
 const textHashtags = imageUploadForm.querySelector(`.text__hashtags`);
+const textDescription = imageUploadForm.querySelector(`.text__description`);
+const MAX_DESCRIPTION_LENGTH = 140;
+
+textDescription.addEventListener(`input`, function () {
+  const descriptionLength = textDescription.value.length;
+
+  if (descriptionLength > MAX_DESCRIPTION_LENGTH) {
+    textDescription.setCustomValidity(`Сообщение слишком длинное. Удалите лишние ` + (descriptionLength - MAX_DESCRIPTION_LENGTH) + ` симв.`);
+  } else {
+    textDescription.setCustomValidity(``);
+  }
+  textDescription.reportValidity();
+});
+
+/*
+const hashtags = textHashtags.value.split(` `);
+const regularHashtag = /^#[\w\d]*$/;
+
+const validityHashtags = function () {
+  hashtags.forEach((item, i) => {
+    regularHashtag.test(hashtags[i]);
+  });
+}
+*/
