@@ -145,6 +145,8 @@ const openUpload = function () {
   renderImageScale();
   checkScaleControls();
   // Сбрасывает с превью изображения все эффекты
+  effectValue = START_EFFECT_VALUE;
+  renderEffectLevel();
   removeAllImageEffects();
   imageUploadPreview.classList.add(`effects__preview--none`);
   uploadEffectLevel.classList.add(`hidden`);
@@ -154,8 +156,10 @@ const closeUpload = function () {
   imageUploadOverlay.classList.add(`hidden`);
   document.removeEventListener(`keydown`, onPopupEscPress);
   unfixBody();
-  // Сбрасывает значение загруженного изображения
+  // Сбрасывает значения в форме
   uploadOpenFile.value = ``;
+  textDescription.value = ``;
+  textHashtags.value = ``;
 };
 
 uploadOpenFile.addEventListener(`change`, function () {
@@ -259,9 +263,12 @@ const effectLevelValue = imageUploadForm.querySelector(`.effect-level__value`);
 const effectLevelPin = imageUploadForm.querySelector(`.effect-level__pin`);
 
 const START_EFFECT_VALUE = 100;
-let effectValue = START_EFFECT_VALUE;
-effectLevelValue.value = effectValue;
 const NEW_EFFECT_VALUE = 40; // временная пременная
+let effectValue = START_EFFECT_VALUE;
+
+const renderEffectLevel = function () {
+  effectLevelValue.value = effectValue;
+};
 
 const renderEffectValue = function (max, min) {
   return ((max + min) * effectValue * 0.01);
@@ -280,14 +287,18 @@ const effectsChangeHandler = function (evt) {
     removeAllImageEffects();
     imageUploadPreview.classList.add(`effects__preview--` + evt.target.value);
 
+    effectValue = START_EFFECT_VALUE;
+    renderEffectLevel();
+
     if (evt.target.value === `none`) {
       uploadEffectLevel.classList.add(`hidden`);
     } else {
-      effectValue = START_EFFECT_VALUE;
       uploadEffectLevel.classList.remove(`hidden`);
 
       effectLevelPin.addEventListener(`mouseup`, function () {
         effectValue = NEW_EFFECT_VALUE; // временная пременная
+        renderEffectLevel();
+
         removeAllImageEffects();
         if (evt.target.value === `chrome`) {
           imageUploadPreview.style.filter = `grayscale(` + renderEffectValue(1, 0) + `)`;
@@ -311,7 +322,27 @@ imageUploadForm.addEventListener(`change`, effectsChangeHandler);
 // 1.3. Валидация хэштегов и комментариев
 const textHashtags = imageUploadForm.querySelector(`.text__hashtags`);
 const textDescription = imageUploadForm.querySelector(`.text__description`);
+const MAX_HASHTAGS_COUNT = 5;
 const MAX_DESCRIPTION_LENGTH = 140;
+
+textHashtags.addEventListener(`input`, function () {
+  const hashtags = textHashtags.value.split(` `);
+  const regularHashtag = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
+
+  if (hashtags.length > MAX_HASHTAGS_COUNT) {
+    textHashtags.setCustomValidity(`Используйте не более ` + MAX_HASHTAGS_COUNT + ` хэш-тегов`);
+  } else {
+    hashtags.forEach((item, i) => {
+      if (!regularHashtag.test(hashtags[i])) {
+        textHashtags.setCustomValidity(`Введите корректный хэш-тег`);
+      } else {
+        textHashtags.setCustomValidity(``);
+      }
+    });
+  }
+
+  textHashtags.reportValidity();
+});
 
 textDescription.addEventListener(`input`, function () {
   const descriptionLength = textDescription.value.length;
@@ -321,16 +352,6 @@ textDescription.addEventListener(`input`, function () {
   } else {
     textDescription.setCustomValidity(``);
   }
+
   textDescription.reportValidity();
 });
-
-/*
-const hashtags = textHashtags.value.split(` `);
-const regularHashtag = /^#[\w\d]*$/;
-
-const validityHashtags = function () {
-  hashtags.forEach((item, i) => {
-    regularHashtag.test(hashtags[i]);
-  });
-}
-*/
