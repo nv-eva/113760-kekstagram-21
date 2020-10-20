@@ -144,7 +144,7 @@ const openUpload = function () {
   renderImageScale();
   checkScaleControls();
   // Сбрасывает с превью изображения все эффекты
-  removeAllImageEffecs();
+  removeAllImageEffects();
   imageUploadPreview.classList.add(`effects__preview--none`);
   uploadEffectLevel.classList.add(`hidden`);
 };
@@ -260,22 +260,52 @@ scaleControlValue.addEventListener(`keydown`, function (evt) {
 // 1.2. Применение эффекта для изображения
 const imageUploadForm = document.querySelector(`.img-upload__form`);
 const uploadEffectLevel = document.querySelector(`.img-upload__effect-level`);
+const effectLevelValue = document.querySelector(`.effect-level__value`);
+const effectLevelPin = document.querySelector(`.effect-level__pin`);
 
-const removeAllImageEffecs = function () {
+const START_EFFECT_VALUE = 100;
+let effectValue = START_EFFECT_VALUE;
+effectLevelValue.value = effectValue;
+const NEW_EFFECT_VALUE = 40; // временная пременная
+
+const renderEffectValue = function (max, min) {
+  return ((max + min) * effectValue * 0.01);
+};
+
+const removeAllImageEffects = function () {
   const Effects = imageUploadForm.querySelectorAll(`input[type="radio"]`);
   Effects.forEach((item, i) => {
     imageUploadPreview.classList.remove(`effects__preview--` + Effects[i].value);
   });
+  imageUploadPreview.style.filter = ``;
 };
 
 const effectsChangeHandler = function (evt) {
   if (evt.target.matches(`input[type="radio"]`)) {
-    removeAllImageEffecs();
+    removeAllImageEffects();
     imageUploadPreview.classList.add(`effects__preview--` + evt.target.value);
-    if (evt.target.value == `none`) {
+
+    if (evt.target.value === `none`) {
       uploadEffectLevel.classList.add(`hidden`);
     } else {
+      effectValue = START_EFFECT_VALUE;
       uploadEffectLevel.classList.remove(`hidden`);
+
+      effectLevelPin.addEventListener(`mouseup`, function () {
+        effectValue = NEW_EFFECT_VALUE; // временная пременная
+        removeAllImageEffects();
+        if (evt.target.value === `chrome`) {
+          imageUploadPreview.style.filter = `grayscale(` + renderEffectValue(1, 0) + `)`;
+        } else if (evt.target.value === `sepia`) {
+          imageUploadPreview.style.filter = `sepia(` + renderEffectValue(1, 0) + `)`;
+        } else if (evt.target.value === `marvin`) {
+          imageUploadPreview.style.filter = `invert(` + renderEffectValue(100, 0) + `%)`;
+        } else if (evt.target.value === `phobos`) {
+          imageUploadPreview.style.filter = `blur(` + renderEffectValue(3, 0) + `px)`;
+        } else if (evt.target.value === `heat`) {
+          imageUploadPreview.style.filter = `brightness(` + renderEffectValue(3, 1) + `)`;
+        }
+      });
     }
   }
 };
