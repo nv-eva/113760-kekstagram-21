@@ -332,7 +332,7 @@ const validationHashtags = function () {
 
   if (hashtags.length > MAX_HASHTAGS_COUNT) {
     textHashtags.setCustomValidity(`Используйте не более ` + MAX_HASHTAGS_COUNT + ` хэш-тегов`);
-  } else if ((new Set(hashtags)).size < hashtags.lenght) {
+  } else if ((new Set(hashtags)).size < hashtags.length) {
     textHashtags.setCustomValidity(`Хэш-теги не должны повторяться`);
   } else {
     hashtags.forEach((item, i) => {
