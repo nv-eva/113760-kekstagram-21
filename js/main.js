@@ -120,26 +120,26 @@ const unfixBody = function () {
 };
 
 
-// Обработка загруженных фотографий
+// 1.1. Показывает и скрывает окно загрузки фото
 const imageUpload = document.querySelector(`.img-upload`);
 const imageUploadOverlay = imageUpload.querySelector(`.img-upload__overlay`);
 const uploadOpenFile = imageUpload.querySelector(`#upload-file`);
 const uploadCancel = imageUpload.querySelector(`#upload-cancel`);
+const textDescription = imageUpload.querySelector(`.text__description`);
 
 const onPopupEscPress = function (evt) {
-  if (evt.key === `Escape`) {
+  if (evt.key === `Escape` && document.activeElement !== textDescription) {
     evt.preventDefault();
     closeUpload();
   }
 };
 
-// 1.1. Показывает окно загрузки фото
-// Надо доработать: открытие файла через изменения значения поля #upload-file
 const openUpload = function () {
   imageUploadOverlay.classList.remove(`hidden`);
   document.addEventListener(`keydown`, onPopupEscPress);
   fixBody();
   // Прописывает загруженному превью изображения рамер 100%
+  scaleValue = 1;
   renderScaleControlValue();
   renderImageScale();
   checkScaleControls();
@@ -149,24 +149,15 @@ const openUpload = function () {
   uploadEffectLevel.classList.add(`hidden`);
 };
 
-uploadOpenFile.addEventListener(`click`, function (evt) {
-  evt.preventDefault();
-  openUpload();
-});
-
-uploadOpenFile.addEventListener(`keydown`, function (evt) {
-  if (evt.key === `Enter`) {
-    evt.preventDefault();
-    openUpload();
-  }
-});
-
-// 1.1. Скрывает окно загрузки фото
 const closeUpload = function () {
   imageUploadOverlay.classList.add(`hidden`);
   document.removeEventListener(`keydown`, onPopupEscPress);
   unfixBody();
 };
+
+uploadOpenFile.addEventListener(`change`, function () {
+  openUpload();
+});
 
 uploadCancel.addEventListener(`click`, function () {
   closeUpload();
@@ -257,11 +248,12 @@ scaleControlValue.addEventListener(`keydown`, function (evt) {
   }
 });
 
+
 // 1.2. Применение эффекта для изображения
 const imageUploadForm = document.querySelector(`.img-upload__form`);
-const uploadEffectLevel = document.querySelector(`.img-upload__effect-level`);
-const effectLevelValue = document.querySelector(`.effect-level__value`);
-const effectLevelPin = document.querySelector(`.effect-level__pin`);
+const uploadEffectLevel = imageUploadForm.querySelector(`.img-upload__effect-level`);
+const effectLevelValue = imageUploadForm.querySelector(`.effect-level__value`);
+const effectLevelPin = imageUploadForm.querySelector(`.effect-level__pin`);
 
 const START_EFFECT_VALUE = 100;
 let effectValue = START_EFFECT_VALUE;
@@ -273,9 +265,9 @@ const renderEffectValue = function (max, min) {
 };
 
 const removeAllImageEffects = function () {
-  const Effects = imageUploadForm.querySelectorAll(`input[type="radio"]`);
-  Effects.forEach((item, i) => {
-    imageUploadPreview.classList.remove(`effects__preview--` + Effects[i].value);
+  const effects = imageUploadForm.querySelectorAll(`input[type="radio"]`);
+  effects.forEach((item, i) => {
+    imageUploadPreview.classList.remove(`effects__preview--` + effects[i].value);
   });
   imageUploadPreview.style.filter = ``;
 };
