@@ -128,7 +128,9 @@ const uploadCancel = imageUpload.querySelector(`#upload-cancel`);
 const textDescription = imageUpload.querySelector(`.text__description`);
 
 const onPopupEscPress = function (evt) {
-  if (evt.key === `Escape` && document.activeElement !== textDescription) {
+  if (evt.key === `Escape`
+    && document.activeElement !== textDescription
+    && document.activeElement !== textHashtags) {
     evt.preventDefault();
     closeUpload();
   }
@@ -153,6 +155,8 @@ const closeUpload = function () {
   imageUploadOverlay.classList.add(`hidden`);
   document.removeEventListener(`keydown`, onPopupEscPress);
   unfixBody();
+  // Сбрасывает значение загруженного изображения
+  uploadOpenFile.value = ``;
 };
 
 uploadOpenFile.addEventListener(`change`, function () {
@@ -303,3 +307,7 @@ const effectsChangeHandler = function (evt) {
 };
 
 imageUploadForm.addEventListener(`change`, effectsChangeHandler);
+
+
+// 1.3. Валидация хэштегов
+const textHashtags = imageUploadForm.querySelector(`.text__hashtags`);
