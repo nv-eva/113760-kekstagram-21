@@ -60,6 +60,7 @@ const photoTemplate = document.querySelector(`#picture`).content.querySelector(`
 const renderPhoto = function (photo) {
   const photoElement = photoTemplate.cloneNode(true);
   photoElement.querySelector(`.picture__img`).src = photo.url;
+  photoElement.querySelector(`.picture__img`).alt = photo.description;
   photoElement.querySelector(`.picture__likes`).textContent = photo.likes;
   photoElement.querySelector(`.picture__comments`).textContent = photo.comments.length;
   return photoElement;
@@ -75,40 +76,104 @@ photoListElement.appendChild(fragment);
 
 
 // 2.1. Показывает элемент big-picture
+const usersPhotos = document.querySelectorAll(`.picture`);
 const bigPicture = document.querySelector(`.big-picture`);
-// bigPicture.classList.remove(`hidden`);
-
-bigPicture.querySelector(`.big-picture__img img`).src = photos[0].url;
-bigPicture.querySelector(`.likes-count`).textContent = photos[0].likes;
-bigPicture.querySelector(`.comments-count`).textContent = photos[0].comments.length;
-bigPicture.querySelector(`.social__caption`).textContent = photos[0].description;
-
-const commentsList = bigPicture.querySelector(`.social__comments`);
-const commentsItem = bigPicture.querySelector(`.social__comment`);
+const bigPictureCancel = bigPicture.querySelector(`#picture-cancel`);
 
 const renderComment = function (comment) {
-  const photoComment = commentsItem.cloneNode(true);
-  photoComment.querySelector(`.social__picture`).src = comment.avatar;
-  photoComment.querySelector(`.social__picture`).alt = comment.name;
-  photoComment.querySelector(`.social__text`).textContent = comment.message;
+  const photoComment = document.createElement(`li`);
+  photoComment.classList.add(`social__comment`);
+
+  const avatar = document.createElement(`img`);
+  avatar.classList.add(`social__picture`);
+  avatar.src = comment.avatar;
+  avatar.alt = comment.name;
+  avatar.width = `35`;
+  avatar.height = `35`;
+  photoComment.appendChild(avatar);
+
+  const commentText = document.createElement(`p`);
+  commentText.classList.add(`social__text`);
+  commentText.textContent = comment.message;
+  photoComment.appendChild(commentText);
+
   return photoComment;
 };
 
-for (let j = 0; j < photos[0].comments.length; j++) {
-  const comment = renderComment(photos[0].comments[j]);
-  commentsList.appendChild(comment);
+const renderBigPicture = function (photo) {
+  bigPicture.querySelector(`.big-picture__img img`).src = photo.url;
+  bigPicture.querySelector(`.likes-count`).textContent = photo.likes;
+  bigPicture.querySelector(`.comments-count`).textContent = photo.comments.length;
+  bigPicture.querySelector(`.social__caption`).textContent = photo.description;
+
+  const commentsList = bigPicture.querySelector(`.social__comments`);
+  commentsList.textContent = ``;
+
+  const photoComments = document.createDocumentFragment();
+  for (let j = 0; j < photo.comments.length; j++) {
+    const comment = renderComment(photo.comments[j]);
+    photoComments.appendChild(comment);
+  }
+  commentsList.appendChild(photoComments);
+};
+
+const onBigPictureEscPress = function (evt) {
+  if (evt.key === `Escape`) {
+    evt.preventDefault();
+    hideBigPicture();
+  }
+};
+
+const showBigPicture = function () {
+  bigPicture.classList.remove(`hidden`);
+  document.addEventListener(`keydown`, onBigPictureEscPress);
+  fixBody();
+};
+
+const hideBigPicture = function () {
+  bigPicture.classList.add(`hidden`);
+  document.removeEventListener(`keydown`, onBigPictureEscPress);
+  unfixBody();
+};
+
+for (let k = 0; k < usersPhotos.length; k++) {
+  const currentUserPhoto = usersPhotos[k];
+
+  currentUserPhoto.addEventListener(`click`, function () {
+    renderBigPicture(photos[k]);
+    hidecounterComments();
+    showBigPicture();
+  });
+
+  currentUserPhoto.addEventListener(`keydown`, function (evt) {
+    if (evt.key === `Enter`) {
+      renderBigPicture(photos[k]);
+      hidecounterComments();
+      showBigPicture();
+    }
+  });
 }
+
+bigPictureCancel.addEventListener(`click`, hideBigPicture);
+
+bigPictureCancel.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    hideBigPicture();
+  }
+});
 
 
 // 2.2. Прячет блоки счетчика комментариев и загрузки новых комментариев
-const counterComments = bigPicture.querySelector(`.social__comment-count`);
-counterComments.classList.add(`hidden`);
+const hidecounterComments = function () {
+  const counterComments = bigPicture.querySelector(`.social__comment-count`);
+  counterComments.classList.add(`hidden`);
 
-const loaderComments = bigPicture.querySelector(`.comments-loader`);
-loaderComments.classList.add(`hidden`);
+  const loaderComments = bigPicture.querySelector(`.comments-loader`);
+  loaderComments.classList.add(`hidden`);
+};
 
 
-// 2.3. Добавляет body класс modal-open
+// 2.3. Добавляет и удаляет у body класс modal-open
 const body = document.querySelector(`body`);
 
 const fixBody = function () {
@@ -162,13 +227,9 @@ const closeUpload = function () {
   textHashtags.value = ``;
 };
 
-uploadOpenFile.addEventListener(`change`, function () {
-  openUpload();
-});
+uploadOpenFile.addEventListener(`change`, openUpload);
 
-uploadCancel.addEventListener(`click`, function () {
-  closeUpload();
-});
+uploadCancel.addEventListener(`click`, closeUpload);
 
 uploadCancel.addEventListener(`keydown`, function (evt) {
   if (evt.key === `Enter`) {
@@ -347,13 +408,9 @@ const validationHashtags = function () {
   textHashtags.reportValidity();
 };
 
-textHashtags.addEventListener(`input`, function () {
-  validationHashtags();
-});
+textHashtags.addEventListener(`input`, validationHashtags);
 
-uploadSubmit.addEventListener(`click`, function () {
-  validationHashtags();
-});
+uploadSubmit.addEventListener(`click`, validationHashtags);
 
 uploadSubmit.addEventListener(`keydown`, function (evt) {
   if (evt.key === `Enter`) {
