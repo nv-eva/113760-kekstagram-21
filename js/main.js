@@ -60,6 +60,7 @@ const photoTemplate = document.querySelector(`#picture`).content.querySelector(`
 const renderPhoto = function (photo) {
   const photoElement = photoTemplate.cloneNode(true);
   photoElement.querySelector(`.picture__img`).src = photo.url;
+  photoElement.querySelector(`.picture__img`).alt = photo.description;
   photoElement.querySelector(`.picture__likes`).textContent = photo.likes;
   photoElement.querySelector(`.picture__comments`).textContent = photo.comments.length;
   return photoElement;
@@ -75,9 +76,48 @@ photoListElement.appendChild(fragment);
 
 
 // 2.1. Показывает элемент big-picture
+const usersPhotos = document.querySelectorAll(`.picture`);
 const bigPicture = document.querySelector(`.big-picture`);
-// bigPicture.classList.remove(`hidden`);
+const bigPictureCancel = bigPicture.querySelector(`#picture-cancel`);
 
+const onBigPictureEscPress = function (evt) {
+  if (evt.key === `Escape`) {
+    evt.preventDefault();
+    hideBigPicture();
+  }
+};
+
+const showBigPicture = function () {
+  bigPicture.classList.remove(`hidden`);
+  document.addEventListener(`keydown`, onBigPictureEscPress);
+  fixBody();
+};
+
+const hideBigPicture = function () {
+  bigPicture.classList.add(`hidden`);
+  document.removeEventListener(`keydown`, onBigPictureEscPress);
+  unfixBody();
+};
+
+for (let k = 0; k < usersPhotos.length; k++) {
+  const currentUserPhoto = usersPhotos[k];
+
+  currentUserPhoto.addEventListener(`click`, function () {
+    showBigPicture();
+  });
+
+  currentUserPhoto.addEventListener(`keydown`, function (evt) {
+    if (evt.key === `Enter`) {
+      showBigPicture();
+    }
+  });
+}
+
+bigPictureCancel.addEventListener(`click`, function () {
+  hideBigPicture();
+});
+
+/*
 bigPicture.querySelector(`.big-picture__img img`).src = photos[0].url;
 bigPicture.querySelector(`.likes-count`).textContent = photos[0].likes;
 bigPicture.querySelector(`.comments-count`).textContent = photos[0].comments.length;
@@ -100,13 +140,13 @@ for (let j = 0; j < photos[0].comments.length; j++) {
 }
 
 
-// 2.2. Прячет блоки счетчика комментариев и загрузки новых комментариев
 const counterComments = bigPicture.querySelector(`.social__comment-count`);
 counterComments.classList.add(`hidden`);
 
 const loaderComments = bigPicture.querySelector(`.comments-loader`);
 loaderComments.classList.add(`hidden`);
 
+*/
 
 // 2.3. Добавляет body класс modal-open
 const body = document.querySelector(`body`);
