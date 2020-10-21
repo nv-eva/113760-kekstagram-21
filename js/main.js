@@ -80,40 +80,38 @@ const usersPhotos = document.querySelectorAll(`.picture`);
 const bigPicture = document.querySelector(`.big-picture`);
 const bigPictureCancel = bigPicture.querySelector(`#picture-cancel`);
 
-const renderBigPicture = function (currentIndex) {
-  const currentPhoto = photos[currentIndex];
+const renderComment = function (comment) {
+  const photoComment = document.createElement(`li`);
+  photoComment.classList.add(`social__comment`);
 
-  bigPicture.querySelector(`.big-picture__img img`).src = currentPhoto.url;
-  bigPicture.querySelector(`.likes-count`).textContent = currentPhoto.likes;
-  bigPicture.querySelector(`.comments-count`).textContent = currentPhoto.comments.length;
-  bigPicture.querySelector(`.social__caption`).textContent = currentPhoto.description;
+  const avatar = document.createElement(`img`);
+  avatar.classList.add(`social__picture`);
+  avatar.src = comment.avatar;
+  avatar.alt = comment.name;
+  avatar.width = `35`;
+  avatar.height = `35`;
+  photoComment.appendChild(avatar);
 
-  const renderComment = function (comment) {
-    const photoComment = document.createElement(`li`);
-    photoComment.classList.add(`social__comment`);
+  const commentText = document.createElement(`p`);
+  commentText.classList.add(`social__text`);
+  commentText.textContent = comment.message;
+  photoComment.appendChild(commentText);
 
-    const avatar = document.createElement(`img`);
-    avatar.classList.add(`social__picture`);
-    avatar.src = comment.avatar;
-    avatar.alt = comment.name;
-    avatar.width = `35`;
-    avatar.height = `35`;
-    photoComment.appendChild(avatar);
+  return photoComment;
+};
 
-    const commentText = document.createElement(`p`);
-    commentText.classList.add(`social__text`);
-    commentText.textContent = comment.message;
-    photoComment.appendChild(commentText);
-
-    return photoComment;
-  };
+const renderBigPicture = function (photo) {
+  bigPicture.querySelector(`.big-picture__img img`).src = photo.url;
+  bigPicture.querySelector(`.likes-count`).textContent = photo.likes;
+  bigPicture.querySelector(`.comments-count`).textContent = photo.comments.length;
+  bigPicture.querySelector(`.social__caption`).textContent = photo.description;
 
   const commentsList = bigPicture.querySelector(`.social__comments`);
   commentsList.textContent = ``;
 
   const photoComments = document.createDocumentFragment();
-  for (let j = 0; j < currentPhoto.comments.length; j++) {
-    const comment = renderComment(currentPhoto.comments[j]);
+  for (let j = 0; j < photo.comments.length; j++) {
+    const comment = renderComment(photo.comments[j]);
     photoComments.appendChild(comment);
   }
   commentsList.appendChild(photoComments);
@@ -130,7 +128,6 @@ const showBigPicture = function () {
   bigPicture.classList.remove(`hidden`);
   document.addEventListener(`keydown`, onBigPictureEscPress);
   fixBody();
-  bigPictureCancel.focus();
 };
 
 const hideBigPicture = function () {
@@ -143,14 +140,14 @@ for (let k = 0; k < usersPhotos.length; k++) {
   const currentUserPhoto = usersPhotos[k];
 
   currentUserPhoto.addEventListener(`click`, function () {
-    renderBigPicture(k);
+    renderBigPicture(photos[k]);
     hidecounterComments();
     showBigPicture();
   });
 
   currentUserPhoto.addEventListener(`keydown`, function (evt) {
     if (evt.key === `Enter`) {
-      renderBigPicture(k);
+      renderBigPicture(photos[k]);
       hidecounterComments();
       showBigPicture();
     }
