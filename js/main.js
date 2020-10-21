@@ -102,9 +102,7 @@ const hideBigPicture = function () {
 for (let k = 0; k < usersPhotos.length; k++) {
   const currentUserPhoto = usersPhotos[k];
 
-  currentUserPhoto.addEventListener(`click`, function () {
-    showBigPicture();
-  });
+  currentUserPhoto.addEventListener(`click`, showBigPicture);
 
   currentUserPhoto.addEventListener(`keydown`, function (evt) {
     if (evt.key === `Enter`) {
@@ -113,8 +111,12 @@ for (let k = 0; k < usersPhotos.length; k++) {
   });
 }
 
-bigPictureCancel.addEventListener(`click`, function () {
-  hideBigPicture();
+bigPictureCancel.addEventListener(`click`, hideBigPicture);
+
+bigPictureCancel.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    hideBigPicture();
+  }
 });
 
 /*
@@ -148,7 +150,7 @@ loaderComments.classList.add(`hidden`);
 
 */
 
-// 2.3. Добавляет body класс modal-open
+// 2.3. Добавляет и удаляет у body класс modal-open
 const body = document.querySelector(`body`);
 
 const fixBody = function () {
@@ -202,13 +204,9 @@ const closeUpload = function () {
   textHashtags.value = ``;
 };
 
-uploadOpenFile.addEventListener(`change`, function () {
-  openUpload();
-});
+uploadOpenFile.addEventListener(`change`, openUpload);
 
-uploadCancel.addEventListener(`click`, function () {
-  closeUpload();
-});
+uploadCancel.addEventListener(`click`, closeUpload);
 
 uploadCancel.addEventListener(`keydown`, function (evt) {
   if (evt.key === `Enter`) {
@@ -387,13 +385,9 @@ const validationHashtags = function () {
   textHashtags.reportValidity();
 };
 
-textHashtags.addEventListener(`input`, function () {
-  validationHashtags();
-});
+textHashtags.addEventListener(`input`, validationHashtags);
 
-uploadSubmit.addEventListener(`click`, function () {
-  validationHashtags();
-});
+uploadSubmit.addEventListener(`click`, validationHashtags);
 
 uploadSubmit.addEventListener(`keydown`, function (evt) {
   if (evt.key === `Enter`) {
