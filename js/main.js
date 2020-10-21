@@ -88,29 +88,35 @@ const renderBigPicture = function (currentIndex) {
   bigPicture.querySelector(`.comments-count`).textContent = currentPhoto.comments.length;
   bigPicture.querySelector(`.social__caption`).textContent = currentPhoto.description;
 
-  const commentsList = bigPicture.querySelector(`.social__comments`);
-  const commentsItem = bigPicture.querySelector(`.social__comment`);
-
   const renderComment = function (comment) {
-    const photoComment = commentsItem.cloneNode(true);
-    photoComment.querySelector(`.social__picture`).src = comment.avatar;
-    photoComment.querySelector(`.social__picture`).alt = comment.name;
-    photoComment.querySelector(`.social__text`).textContent = comment.message;
+    const photoComment = document.createElement(`li`);
+    photoComment.classList.add(`social__comment`);
+
+    const avatar = document.createElement(`img`);
+    avatar.classList.add(`social__picture`);
+    avatar.src = comment.avatar;
+    avatar.alt = comment.name;
+    avatar.width = `35`;
+    avatar.height = `35`;
+    photoComment.appendChild(avatar);
+
+    const commentText = document.createElement(`p`);
+    commentText.classList.add(`social__text`);
+    commentText.textContent = comment.message;
+    photoComment.appendChild(commentText);
+
     return photoComment;
   };
 
+  const commentsList = bigPicture.querySelector(`.social__comments`);
+  commentsList.textContent = ``;
+
+  const photoComments = document.createDocumentFragment();
   for (let j = 0; j < currentPhoto.comments.length; j++) {
     const comment = renderComment(currentPhoto.comments[j]);
-    commentsList.appendChild(comment);
+    photoComments.appendChild(comment);
   }
-};
-
-const hidecounterComments = function () {
-  const counterComments = bigPicture.querySelector(`.social__comment-count`);
-  counterComments.classList.add(`hidden`);
-
-  const loaderComments = bigPicture.querySelector(`.comments-loader`);
-  loaderComments.classList.add(`hidden`);
+  commentsList.appendChild(photoComments);
 };
 
 const onBigPictureEscPress = function (evt) {
@@ -158,6 +164,16 @@ bigPictureCancel.addEventListener(`keydown`, function (evt) {
     hideBigPicture();
   }
 });
+
+
+// 2.2. Прячет блоки счетчика комментариев и загрузки новых комментариев
+const hidecounterComments = function () {
+  const counterComments = bigPicture.querySelector(`.social__comment-count`);
+  counterComments.classList.add(`hidden`);
+
+  const loaderComments = bigPicture.querySelector(`.comments-loader`);
+  loaderComments.classList.add(`hidden`);
+};
 
 
 // 2.3. Добавляет и удаляет у body класс modal-open
