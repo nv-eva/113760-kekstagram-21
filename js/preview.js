@@ -2,6 +2,7 @@
 
 (function () {
   const bigPicture = document.querySelector(`.big-picture`);
+  window.bigPicture = bigPicture;
 
   const renderComment = function (comment) {
     const photoComment = document.createElement(`li`);
@@ -23,7 +24,7 @@
     return photoComment;
   };
 
-  const renderBigPicture = function (photo) {
+  window.renderBigPicture = function (photo) {
     bigPicture.querySelector(`.big-picture__img img`).src = photo.url;
     bigPicture.querySelector(`.likes-count`).textContent = photo.likes;
     bigPicture.querySelector(`.comments-count`).textContent = photo.comments.length;
