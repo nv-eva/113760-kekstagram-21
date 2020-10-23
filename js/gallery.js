@@ -32,23 +32,31 @@
     window.main.unfixBody();
   };
 
+  const hideCounterComments = function () {
+    const counterComments = window.bigPicture.querySelector(`.social__comment-count`);
+    counterComments.classList.add(`hidden`);
+
+    const loaderComments = window.bigPicture.querySelector(`.comments-loader`);
+    loaderComments.classList.add(`hidden`);
+  };
+
   for (let k = 0; k < usersPhotos.length; k++) {
     const currentUserPhoto = usersPhotos[k];
 
     const showBigPicture = function () {
       window.renderBigPicture(window.photos[k]);
-      window.hideCounterComments();
+      hideCounterComments();
       openBigPicture();
     };
 
     currentUserPhoto.addEventListener(`click`, showBigPicture);
     currentUserPhoto.addEventListener(`keydown`, function (evt) {
-      window.util.isEnterEvent(evt, showBigPicture);
+      window.main.isEnterEvent(evt, showBigPicture);
     });
   }
 
   bigPictureCancel.addEventListener(`click`, hideBigPicture);
   bigPictureCancel.addEventListener(`keydown`, function (evt) {
-    window.util.isEnterEvent(evt, hideBigPicture);
+    window.main.isEnterEvent(evt, hideBigPicture);
   });
 })();

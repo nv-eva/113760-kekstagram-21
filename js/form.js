@@ -47,7 +47,7 @@
 
   uploadCancel.addEventListener(`click`, closeUpload);
   uploadCancel.addEventListener(`keydown`, function (evt) {
-    window.util.isEnterEvent(evt, closeUpload);
+    window.main.isEnterEvent(evt, closeUpload);
   });
 
 
@@ -224,7 +224,7 @@
   textHashtags.addEventListener(`input`, validationHashtags);
   uploadSubmit.addEventListener(`click`, validationHashtags);
   uploadSubmit.addEventListener(`keydown`, function (evt) {
-    window.util.isEnterEvent(evt, validationHashtags);
+    window.main.isEnterEvent(evt, validationHashtags);
   });
 
   textDescription.addEventListener(`input`, function () {

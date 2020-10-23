@@ -7,19 +7,27 @@
 
   const photosIndex = Array(COUNT_PHOTOS).fill().map((e, i) => i + 1);
 
+  const getRandomIndex = function (min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  };
+
+  const getRandomElement = function (array) {
+    return array[getRandomIndex(0, array.length)];
+  };
+
   const generateMessage = function () {
-    let message = window.main.getRandomElement(USER_MESSAGES);
+    let message = getRandomElement(USER_MESSAGES);
     if (Math.random() > 0.5) {
-      message += ` ` + window.main.getRandomElement(USER_MESSAGES);
+      message += ` ` + getRandomElement(USER_MESSAGES);
     }
     return (message);
   };
 
   const generateComment = function () {
     const comment = {};
-    comment.avatar = String(`img/avatar-` + window.main.getRandomIndex(1, 6) + `.svg`);
+    comment.avatar = String(`img/avatar-` + getRandomIndex(1, 6) + `.svg`);
     comment.message = generateMessage();
-    comment.name = window.main.getRandomElement(USER_NAMES);
+    comment.name = getRandomElement(USER_NAMES);
     return (comment);
   };
 
@@ -30,8 +38,8 @@
     const photo = {};
     photo.url = String(`photos/` + photosIndex[0] + `.jpg`);
     photo.description = String(`Описание к фотографии ` + photosIndex[0]);
-    photo.likes = window.main.getRandomIndex(15, 200);
-    photo.comments = generateComments(window.main.getRandomIndex(0, 15));
+    photo.likes = getRandomIndex(15, 200);
+    photo.comments = generateComments(getRandomIndex(0, 15));
     photosIndex.shift();
     return (photo);
   };

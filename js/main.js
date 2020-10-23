@@ -4,12 +4,17 @@
   const body = document.querySelector(`body`);
 
   window.main = {
-    getRandomIndex: function (min, max) {
-      return Math.floor(Math.random() * (max - min)) + min;
+    isEscapeEvent: function (evt, action) {
+      if (evt.key === `Escape`) {
+        evt.preventDefault();
+        action();
+      }
     },
 
-    getRandomElement: function (array) {
-      return array[window.main.getRandomIndex(0, array.length)];
+    isEnterEvent: function (evt, action) {
+      if (evt.key === `Enter`) {
+        action();
+      }
     },
 
     fixBody: function () {
