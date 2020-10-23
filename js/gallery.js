@@ -1,15 +1,6 @@
 'use strict';
 
 (function () {
-  // Отрисовывает маленькие фотографии на странице
-  const photoListElement = document.querySelector(`.pictures`);
-  const fragment = document.createDocumentFragment();
-  for (let i = 0; i < window.photos.length; i++) {
-    fragment.appendChild(window.renderPicture(window.photos[i]));
-  }
-  photoListElement.appendChild(fragment);
-
-  // Управляет открытием и закрытием большой фотографии
   const usersPhotos = document.querySelectorAll(`.picture`);
   const bigPictureCancel = window.bigPicture.querySelector(`#picture-cancel`);
 
