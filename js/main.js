@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  const body = document.querySelector(`body`);
+
   window.main = {
     getRandomIndex: function (min, max) {
       return Math.floor(Math.random() * (max - min)) + min;
@@ -8,80 +10,17 @@
 
     getRandomElement: function (array) {
       return array[window.main.getRandomIndex(0, array.length)];
+    },
+
+    fixBody: function () {
+      body.classList.add(`modal-open`);
+    },
+
+    unfixBody: function () {
+      body.classList.remove(`modal-open`);
     }
   };
 })();
-
-// 2.1. Показывает элемент big-picture
-const usersPhotos = document.querySelectorAll(`.picture`);
-const bigPictureCancel = window.bigPicture.querySelector(`#picture-cancel`);
-
-const onBigPictureEscPress = function (evt) {
-  if (evt.key === `Escape`) {
-    evt.preventDefault();
-    hideBigPicture();
-  }
-};
-
-const showBigPicture = function () {
-  window.bigPicture.classList.remove(`hidden`);
-  document.addEventListener(`keydown`, onBigPictureEscPress);
-  fixBody();
-};
-
-const hideBigPicture = function () {
-  window.bigPicture.classList.add(`hidden`);
-  document.removeEventListener(`keydown`, onBigPictureEscPress);
-  unfixBody();
-};
-
-for (let k = 0; k < usersPhotos.length; k++) {
-  const currentUserPhoto = usersPhotos[k];
-
-  currentUserPhoto.addEventListener(`click`, function () {
-    window.renderBigPicture(window.photos[k]);
-    hidecounterComments();
-    showBigPicture();
-  });
-
-  currentUserPhoto.addEventListener(`keydown`, function (evt) {
-    if (evt.key === `Enter`) {
-      window.renderBigPicture(window.photos[k]);
-      hidecounterComments();
-      showBigPicture();
-    }
-  });
-}
-
-bigPictureCancel.addEventListener(`click`, hideBigPicture);
-
-bigPictureCancel.addEventListener(`keydown`, function (evt) {
-  if (evt.key === `Enter`) {
-    hideBigPicture();
-  }
-});
-
-
-// 2.2. Прячет блоки счетчика комментариев и загрузки новых комментариев
-const hidecounterComments = function () {
-  const counterComments = window.bigPicture.querySelector(`.social__comment-count`);
-  counterComments.classList.add(`hidden`);
-
-  const loaderComments = window.bigPicture.querySelector(`.comments-loader`);
-  loaderComments.classList.add(`hidden`);
-};
-
-
-// 2.3. Добавляет и удаляет у body класс modal-open
-const body = document.querySelector(`body`);
-
-const fixBody = function () {
-  body.classList.add(`modal-open`);
-};
-
-const unfixBody = function () {
-  body.classList.remove(`modal-open`);
-};
 
 
 // 1.1. Показывает и скрывает окно загрузки фото
@@ -102,7 +41,7 @@ const onPopupEscPress = function (evt) {
 const openUpload = function () {
   imageUploadOverlay.classList.remove(`hidden`);
   document.addEventListener(`keydown`, onPopupEscPress);
-  fixBody();
+  window.main.fixBody();
   // Прописывает загруженному превью изображения рамер 100%
   scaleValue = 1;
   renderScaleControlValue();
@@ -119,7 +58,7 @@ const openUpload = function () {
 const closeUpload = function () {
   imageUploadOverlay.classList.add(`hidden`);
   document.removeEventListener(`keydown`, onPopupEscPress);
-  unfixBody();
+  window.main.unfixBody();
   // Сбрасывает значения в форме
   uploadOpenFile.value = ``;
   textDescription.value = ``;
@@ -129,11 +68,8 @@ const closeUpload = function () {
 uploadOpenFile.addEventListener(`change`, openUpload);
 
 uploadCancel.addEventListener(`click`, closeUpload);
-
 uploadCancel.addEventListener(`keydown`, function (evt) {
-  if (evt.key === `Enter`) {
-    closeUpload();
-  }
+  window.util.isEnterEvent(evt, closeUpload);
 });
 
 
