@@ -89,44 +89,32 @@
     }
   };
 
-  const scaleSmaller = function () {
+  const makeScaleSmaller = function () {
     if (scaleValue - scaleStep >= MIN_SCALE * 0.01) {
       scaleValue -= scaleStep;
       renderScaleControlValue();
       renderImageScale();
+      checkScaleControls();
     }
   };
 
-  const scaleBigger = function () {
+  const makeScaleBigger = function () {
     if (scaleValue + scaleStep <= MAX_SCALE * 0.01) {
       scaleValue += scaleStep;
       renderScaleControlValue();
       renderImageScale();
+      checkScaleControls();
     }
   };
 
-  scaleControlSmaller.addEventListener(`click`, function () {
-    scaleSmaller();
-    checkScaleControls();
-  });
-
-  scaleControlBigger.addEventListener(`click`, function () {
-    scaleBigger();
-    checkScaleControls();
-  });
-
+  scaleControlSmaller.addEventListener(`click`, makeScaleSmaller);
   scaleControlValue.addEventListener(`keydown`, function (evt) {
-    if (evt.key === `ArrowLeft`) {
-      scaleSmaller();
-      checkScaleControls();
-    }
+    window.main.isLeftEvent(evt, makeScaleSmaller);
   });
 
+  scaleControlBigger.addEventListener(`click`, makeScaleBigger);
   scaleControlValue.addEventListener(`keydown`, function (evt) {
-    if (evt.key === `ArrowRight`) {
-      scaleBigger();
-      checkScaleControls();
-    }
+    window.main.isRightEvent(evt, makeScaleBigger);
   });
 
 

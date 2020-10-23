@@ -17,6 +17,18 @@
       }
     },
 
+    isRightEvent: function (evt, action) {
+      if (evt.key === `ArrowRight`) {
+        action();
+      }
+    },
+
+    isLeftEvent: function (evt, action) {
+      if (evt.key === `ArrowLeft`) {
+        action();
+      }
+    },
+
     fixBody: function () {
       body.classList.add(`modal-open`);
     },
