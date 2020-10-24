@@ -4,36 +4,36 @@
   const body = document.querySelector(`body`);
 
   window.main = {
-    isEscapeEvent: function (evt, action) {
+    isEscapeEvent(evt, action) {
       if (evt.key === `Escape`) {
         evt.preventDefault();
         action();
       }
     },
 
-    isEnterEvent: function (evt, action) {
+    isEnterEvent(evt, action) {
       if (evt.key === `Enter`) {
         action();
       }
     },
 
-    isRightEvent: function (evt, action) {
+    isRightEvent(evt, action) {
       if (evt.key === `ArrowRight`) {
         action();
       }
     },
 
-    isLeftEvent: function (evt, action) {
+    isLeftEvent(evt, action) {
       if (evt.key === `ArrowLeft`) {
         action();
       }
     },
 
-    fixBody: function () {
+    fixBody() {
       body.classList.add(`modal-open`);
     },
 
-    unfixBody: function () {
+    unfixBody() {
       body.classList.remove(`modal-open`);
     }
   };
