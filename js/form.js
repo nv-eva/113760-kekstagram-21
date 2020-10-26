@@ -125,7 +125,6 @@
   const effectLevelPin = imageUploadForm.querySelector(`.effect-level__pin`);
 
   const START_EFFECT_VALUE = 100;
-  const NEW_EFFECT_VALUE = 40; // временная пременная
   let effectValue = START_EFFECT_VALUE;
 
   const renderEffectLevel = function () {
@@ -150,13 +149,13 @@
       imageUploadPreview.classList.add(`effects__preview--` + evt.target.value);
 
       effectValue = START_EFFECT_VALUE;
-      renderEffectLevel();
 
       if (evt.target.value === `none`) {
         uploadEffectLevel.classList.add(`hidden`);
       } else {
         uploadEffectLevel.classList.remove(`hidden`);
 
+        /*
         effectLevelPin.addEventListener(`mouseup`, function () {
           effectValue = NEW_EFFECT_VALUE; // временная пременная
           renderEffectLevel();
@@ -174,6 +173,7 @@
             imageUploadPreview.style.filter = `brightness(` + renderEffectValue(3, 1) + `)`;
           }
         });
+        */
       }
     }
   };
