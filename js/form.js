@@ -26,6 +26,7 @@
     renderImageScale();
     checkScaleControls();
     // Сбрасывает с превью изображения все эффекты
+    renderStartEffectLevel();
     removeAllImageEffects();
     imageUploadPreview.classList.add(`effects__preview--none`);
     uploadEffectLevel.classList.add(`hidden`);
@@ -117,17 +118,29 @@
 
 
   // Применяет эффекты к изображению
-  const uploadEffectLevel = window.move.imageUploadForm.querySelector(`.img-upload__effect-level`);
+  const imageUploadForm = document.querySelector(`.img-upload__form`);
+  const uploadEffectLevel = imageUploadForm.querySelector(`.img-upload__effect-level`);
+  const effectLevelValue = imageUploadForm.querySelector(`.effect-level__value`);
+  const effectLevelDepth = imageUploadForm.querySelector(`.effect-level__depth`);
+  const effectLevelPin = imageUploadForm.querySelector(`.effect-level__pin`);
 
+  const EFFECT_LEVEL_WIDTH = 453;
   const START_EFFECT_VALUE = 100;
+  let effectValue = START_EFFECT_VALUE;
+
+  const renderStartEffectLevel = function () {
+    effectValue = START_EFFECT_VALUE;
+    effectLevelValue.value = START_EFFECT_VALUE;
+    effectLevelDepth.style.width = EFFECT_LEVEL_WIDTH + `px`;
+    effectLevelPin.style.left = EFFECT_LEVEL_WIDTH + `px`;
+  };
 
   const renderEffectValue = function (max, min) {
-    let effectValue = window.move.effectLevelValue.value;
     return ((max + min) * effectValue * 0.01);
   };
 
   const removeAllImageEffects = function () {
-    const effects = window.move.imageUploadForm.querySelectorAll(`input[type="radio"]`);
+    const effects = imageUploadForm.querySelectorAll(`input[type="radio"]`);
     effects.forEach((item, i) => {
       imageUploadPreview.classList.remove(`effects__preview--` + effects[i].value);
     });
@@ -137,6 +150,7 @@
   const effectsChangeHandler = function (evt) {
     if (evt.target.matches(`input[type="radio"]`)) {
       let effect = evt.target.value;
+      renderStartEffectLevel();
       removeAllImageEffects();
       imageUploadPreview.classList.add(`effects__preview--` + effect);
 
@@ -146,32 +160,61 @@
         uploadEffectLevel.classList.remove(`hidden`);
       }
 
-      const changeEffectLevel = function () {
-        removeAllImageEffects();
-        if (effect === `chrome`) {
-          imageUploadPreview.style.filter = `grayscale(` + renderEffectValue(1, 0) + `)`;
-        } else if (effect === `sepia`) {
-          imageUploadPreview.style.filter = `sepia(` + renderEffectValue(1, 0) + `)`;
-        } else if (effect === `marvin`) {
-          imageUploadPreview.style.filter = `invert(` + renderEffectValue(100, 0) + `%)`;
-        } else if (effect === `phobos`) {
-          imageUploadPreview.style.filter = `blur(` + renderEffectValue(3, 0) + `px)`;
-        } else if (effect === `heat`) {
-          imageUploadPreview.style.filter = `brightness(` + renderEffectValue(3, 1) + `)`;
-        }
-      };
+      effectLevelPin.addEventListener(`mousedown`, function () {
+        evt.preventDefault();
 
-      window.move.effectLevelValue.addEventListener(`change`, changeEffectLevel);
+        removeAllImageEffects();
+
+        let startCoord = evt.clientX;
+
+        const onMouseMove = function (moveEvt) {
+          moveEvt.preventDefault();
+
+          const shift = startCoord - moveEvt.clientX;
+          startCoord = moveEvt.clientX;
+
+          let pinPosition = effectLevelPin.offsetLeft - shift;
+          if (pinPosition < 0 || pinPosition > EFFECT_LEVEL_WIDTH) {
+            shift = 0;
+          }
+
+          effectLevelDepth.style.width = pinPosition + `px`;
+          effectLevelPin.style.left = pinPosition + `px`;
+          effectLevelValue.value = Math.round(pinPosition * 100 / EFFECT_LEVEL_WIDTH);
+          effectValue = effectLevelValue.value;
+
+          if (effect === `chrome`) {
+            imageUploadPreview.style.filter = `grayscale(` + renderEffectValue(1, 0) + `)`;
+          } else if (effect === `sepia`) {
+            imageUploadPreview.style.filter = `sepia(` + renderEffectValue(1, 0) + `)`;
+          } else if (effect === `marvin`) {
+            imageUploadPreview.style.filter = `invert(` + renderEffectValue(100, 0) + `%)`;
+          } else if (effect === `phobos`) {
+            imageUploadPreview.style.filter = `blur(` + renderEffectValue(3, 0) + `px)`;
+          } else if (effect === `heat`) {
+            imageUploadPreview.style.filter = `brightness(` + renderEffectValue(3, 1) + `)`;
+          }
+        };
+
+        const onMouseUp = function (upEvt) {
+          upEvt.preventDefault();
+          document.removeEventListener(`mousemove`, onMouseMove);
+          document.removeEventListener(`mouseup`, onMouseUp);
+        };
+
+        document.addEventListener(`mousemove`, onMouseMove);
+        document.addEventListener(`mouseup`, onMouseUp);
+      });
     }
   };
 
-  window.move.imageUploadForm.addEventListener(`change`, effectsChangeHandler);
+  imageUploadForm.addEventListener(`change`, effectsChangeHandler);
 
 
   // Валидирует хэштеги и комментарии
-  const textHashtags = window.move.imageUploadForm.querySelector(`.text__hashtags`);
-  const textDescription = window.move.imageUploadForm.querySelector(`.text__description`);
-  const uploadSubmit = window.move.imageUploadForm.querySelector(`#upload-submit`);
+  const textHashtags = imageUploadForm.querySelector(`.text__hashtags`);
+  const textDescription = imageUploadForm.querySelector(`.text__description`);
+  const uploadSubmit = imageUploadForm.querySelector(`#upload-submit`);
   const MAX_HASHTAGS_COUNT = 5;
   const MAX_DESCRIPTION_LENGTH = 140;
 
