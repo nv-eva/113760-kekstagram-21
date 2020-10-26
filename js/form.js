@@ -119,10 +119,7 @@
 
 
   // Применяет эффекты к изображению
-  const imageUploadForm = document.querySelector(`.img-upload__form`);
-  const uploadEffectLevel = imageUploadForm.querySelector(`.img-upload__effect-level`);
-  const effectLevelValue = imageUploadForm.querySelector(`.effect-level__value`);
-  const effectLevelPin = imageUploadForm.querySelector(`.effect-level__pin`);
+  const uploadEffectLevel = window.move.imageUploadForm.querySelector(`.img-upload__effect-level`);
 
   const START_EFFECT_VALUE = 100;
   let effectValue = START_EFFECT_VALUE;
@@ -136,7 +133,7 @@
   };
 
   const removeAllImageEffects = function () {
-    const effects = imageUploadForm.querySelectorAll(`input[type="radio"]`);
+    const effects = window.move.imageUploadForm.querySelectorAll(`input[type="radio"]`);
     effects.forEach((item, i) => {
       imageUploadPreview.classList.remove(`effects__preview--` + effects[i].value);
     });
@@ -179,13 +176,13 @@
     }
   };
 
-  imageUploadForm.addEventListener(`change`, effectsChangeHandler);
+  window.move.imageUploadForm.addEventListener(`change`, effectsChangeHandler);
 
 
   // Валидирует хэштеги и комментарии
-  const textHashtags = imageUploadForm.querySelector(`.text__hashtags`);
-  const textDescription = imageUploadForm.querySelector(`.text__description`);
-  const uploadSubmit = imageUploadForm.querySelector(`#upload-submit`);
+  const textHashtags = window.move.imageUploadForm.querySelector(`.text__hashtags`);
+  const textDescription = window.move.imageUploadForm.querySelector(`.text__description`);
+  const uploadSubmit = window.move.imageUploadForm.querySelector(`#upload-submit`);
   const MAX_HASHTAGS_COUNT = 5;
   const MAX_DESCRIPTION_LENGTH = 140;
 

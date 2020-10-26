@@ -38,4 +38,9 @@
     document.addEventListener(`mousemove`, onMouseMove);
     document.addEventListener(`mouseup`, onMouseUp);
   });
+
+  window.move = {
+    imageUploadForm: imageUploadForm,
+    effectLevelValue: effectLevelValue
+  };
 })();
