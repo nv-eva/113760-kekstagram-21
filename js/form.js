@@ -145,12 +145,13 @@
 
   const effectsChangeHandler = function (evt) {
     if (evt.target.matches(`input[type="radio"]`)) {
+      let effect = evt.target.value;
       removeAllImageEffects();
-      imageUploadPreview.classList.add(`effects__preview--` + evt.target.value);
+      imageUploadPreview.classList.add(`effects__preview--` + effect);
 
       effectValue = START_EFFECT_VALUE;
 
-      if (evt.target.value === `none`) {
+      if (effect === `none`) {
         uploadEffectLevel.classList.add(`hidden`);
       } else {
         uploadEffectLevel.classList.remove(`hidden`);
