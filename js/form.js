@@ -26,7 +26,7 @@
     renderImageScale();
     checkScaleControls();
     // Сбрасывает с превью изображения все эффекты
-    renderStartEffectLevel();
+    // renderStartEffectLevel();
     removeAllImageEffects();
     imageUploadPreview.classList.add(`effects__preview--none`);
     uploadEffectLevel.classList.add(`hidden`);
@@ -128,12 +128,14 @@
   const START_EFFECT_VALUE = 100;
   let effectValue = START_EFFECT_VALUE;
 
+  /*
   const renderStartEffectLevel = function () {
     effectValue = START_EFFECT_VALUE;
     effectLevelValue.value = START_EFFECT_VALUE;
     effectLevelDepth.style.width = EFFECT_LEVEL_WIDTH + `px`;
     effectLevelPin.style.left = EFFECT_LEVEL_WIDTH + `px`;
   };
+  */
 
   const renderEffectValue = function (max, min) {
     return ((max + min) * effectValue * 0.01);
@@ -150,7 +152,7 @@
   const effectsChangeHandler = function (evt) {
     if (evt.target.matches(`input[type="radio"]`)) {
       let effect = evt.target.value;
-      renderStartEffectLevel();
+      // renderStartEffectLevel();
       removeAllImageEffects();
       imageUploadPreview.classList.add(`effects__preview--` + effect);
 
@@ -163,8 +165,6 @@
       effectLevelPin.addEventListener(`mousedown`, function () {
         evt.preventDefault();
 
-        removeAllImageEffects();
-
         let startCoord = evt.clientX;
 
         const onMouseMove = function (moveEvt) {
@@ -174,26 +174,16 @@
           startCoord = moveEvt.clientX;
 
           let pinPosition = effectLevelPin.offsetLeft - shift;
-          if (pinPosition < 0 || pinPosition > EFFECT_LEVEL_WIDTH) {
-            shift = 0;
+          if (pinPosition >= EFFECT_LEVEL_WIDTH) {
+            pinPosition = EFFECT_LEVEL_WIDTH;
+          } else if (pinPosition < 0) {
+            pinPosition = 0;
           }
 
+          effectValue = pinPosition * 100 / EFFECT_LEVEL_WIDTH;
+          effectLevelValue.value = Math.round(effectValue);
           effectLevelDepth.style.width = pinPosition + `px`;
           effectLevelPin.style.left = pinPosition + `px`;
-          effectLevelValue.value = Math.round(pinPosition * 100 / EFFECT_LEVEL_WIDTH);
-          effectValue = effectLevelValue.value;
-
-          if (effect === `chrome`) {
-            imageUploadPreview.style.filter = `grayscale(` + renderEffectValue(1, 0) + `)`;
-          } else if (effect === `sepia`) {
-            imageUploadPreview.style.filter = `sepia(` + renderEffectValue(1, 0) + `)`;
-          } else if (effect === `marvin`) {
-            imageUploadPreview.style.filter = `invert(` + renderEffectValue(100, 0) + `%)`;
-          } else if (effect === `phobos`) {
-            imageUploadPreview.style.filter = `blur(` + renderEffectValue(3, 0) + `px)`;
-          } else if (effect === `heat`) {
-            imageUploadPreview.style.filter = `brightness(` + renderEffectValue(3, 1) + `)`;
-          }
         };
 
         const onMouseUp = function (upEvt) {
@@ -209,6 +199,22 @@
   };
 
   imageUploadForm.addEventListener(`change`, effectsChangeHandler);
+
+  /*
+
+  if (effect === `chrome`) {
+    imageUploadPreview.style.filter = `grayscale(` + renderEffectValue(1, 0) + `)`;
+  } else if (effect === `sepia`) {
+    imageUploadPreview.style.filter = `sepia(` + renderEffectValue(1, 0) + `)`;
+  } else if (effect === `marvin`) {
+    imageUploadPreview.style.filter = `invert(` + renderEffectValue(100, 0) + `%)`;
+  } else if (effect === `phobos`) {
+    imageUploadPreview.style.filter = `blur(` + renderEffectValue(3, 0) + `px)`;
+  } else if (effect === `heat`) {
+    imageUploadPreview.style.filter = `brightness(` + renderEffectValue(3, 1) + `)`;
+  }
+
+  */
 
 
   // Валидирует хэштеги и комментарии
