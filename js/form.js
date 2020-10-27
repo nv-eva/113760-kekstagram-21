@@ -118,68 +118,30 @@
 
 
   // Применяет эффекты к изображению
-  const imageUploadForm = document.querySelector(`.img-upload__form`);
-  const uploadEffectLevel = imageUploadForm.querySelector(`.img-upload__effect-level`);
-  const effectLevelValue = imageUploadForm.querySelector(`.effect-level__value`);
-  const effectLevelDepth = imageUploadForm.querySelector(`.effect-level__depth`);
-  const effectLevelPin = imageUploadForm.querySelector(`.effect-level__pin`);
+  const uploadEffectLevel = window.move.imageUploadForm.querySelector(`.img-upload__effect-level`);
 
-  const EFFECT_LEVEL_WIDTH = 453;
   const START_EFFECT_VALUE = 100;
   let effectValue = START_EFFECT_VALUE;
 
   const renderStartEffectLevel = function () {
     effectValue = START_EFFECT_VALUE;
-    effectLevelValue.value = START_EFFECT_VALUE;
+    window.move.effectLevelValue.value = START_EFFECT_VALUE;
 
-    const pinPositionStart = effectValue * EFFECT_LEVEL_WIDTH / 100;
-    effectLevelDepth.style.width = pinPositionStart + `px`;
-    effectLevelPin.style.left = pinPositionStart + `px`;
-  };
-
-  const removeAllImageEffects = function () {
-    const effects = imageUploadForm.querySelectorAll(`input[type="radio"]`);
-    effects.forEach((item, i) => {
-      imageUploadPreview.classList.remove(`effects__preview--` + effects[i].value);
-    });
-    imageUploadPreview.style.filter = ``;
-  };
-
-  const onMouseDown = function (evt, action) {
-    evt.preventDefault();
-    let startCoord = evt.clientX;
-
-    const onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
-
-      const shift = startCoord - moveEvt.clientX;
-      startCoord = moveEvt.clientX;
-
-      let pinPosition = effectLevelPin.offsetLeft - shift;
-      if (pinPosition >= EFFECT_LEVEL_WIDTH) {
-        pinPosition = EFFECT_LEVEL_WIDTH;
-      } else if (pinPosition < 0) {
-        pinPosition = 0;
-      }
-
-      effectLevelDepth.style.width = pinPosition + `px`;
-      effectLevelPin.style.left = pinPosition + `px`;
-      effectLevelValue.value = Math.round(pinPosition * 100 / EFFECT_LEVEL_WIDTH);
-      action();
-    };
-
-    const onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
-      document.removeEventListener(`mousemove`, onMouseMove);
-      document.removeEventListener(`mouseup`, onMouseUp);
-    };
-
-    document.addEventListener(`mousemove`, onMouseMove);
-    document.addEventListener(`mouseup`, onMouseUp);
+    const pinPositionStart = effectValue * window.move.EFFECT_LEVEL_WIDTH / 100;
+    window.move.effectLevelDepth.style.width = pinPositionStart + `px`;
+    window.move.effectLevelPin.style.left = pinPositionStart + `px`;
   };
 
   const renderEffectValue = function (max, min) {
     return ((max + min) * effectValue * 0.01);
+  };
+
+  const removeAllImageEffects = function () {
+    const effects = window.move.imageUploadForm.querySelectorAll(`input[type="radio"]`);
+    effects.forEach((item, i) => {
+      imageUploadPreview.classList.remove(`effects__preview--` + effects[i].value);
+    });
+    imageUploadPreview.style.filter = ``;
   };
 
   const effectsChangeHandler = function (evt) {
@@ -189,8 +151,12 @@
       removeAllImageEffects();
       imageUploadPreview.classList.add(`effects__preview--` + effect);
 
+      window.move.effectLevelPin.removeEventListener(`mousedown`, function () {
+        window.move.onMouseDown(evt, changeEffectValue);
+      });
+
       const changeEffectValue = function () {
-        effectValue = effectLevelValue.value;
+        effectValue = window.move.effectLevelValue.value;
 
         if (effect === `chrome`) {
           imageUploadPreview.style.filter = `grayscale(` + renderEffectValue(1, 0) + `)`;
@@ -209,35 +175,20 @@
         uploadEffectLevel.classList.add(`hidden`);
       } else {
         uploadEffectLevel.classList.remove(`hidden`);
-        effectLevelPin.addEventListener(`mousedown`, function () {
-          onMouseDown(evt, changeEffectValue);
+        window.move.effectLevelPin.addEventListener(`mousedown`, function () {
+          window.move.onMouseDown(evt, changeEffectValue);
         });
       }
     }
   };
 
-  imageUploadForm.addEventListener(`change`, effectsChangeHandler);
+  window.move.imageUploadForm.addEventListener(`change`, effectsChangeHandler);
 
-  /*
-
-  if (effect === `chrome`) {
-    imageUploadPreview.style.filter = `grayscale(` + renderEffectValue(1, 0) + `)`;
-  } else if (effect === `sepia`) {
-    imageUploadPreview.style.filter = `sepia(` + renderEffectValue(1, 0) + `)`;
-  } else if (effect === `marvin`) {
-    imageUploadPreview.style.filter = `invert(` + renderEffectValue(100, 0) + `%)`;
-  } else if (effect === `phobos`) {
-    imageUploadPreview.style.filter = `blur(` + renderEffectValue(3, 0) + `px)`;
-  } else if (effect === `heat`) {
-    imageUploadPreview.style.filter = `brightness(` + renderEffectValue(3, 1) + `)`;
-  }
-
-  */
 
   // Валидирует хэштеги и комментарии
-  const textHashtags = imageUploadForm.querySelector(`.text__hashtags`);
-  const textDescription = imageUploadForm.querySelector(`.text__description`);
-  const uploadSubmit = imageUploadForm.querySelector(`#upload-submit`);
+  const textHashtags = window.move.imageUploadForm.querySelector(`.text__hashtags`);
+  const textDescription = window.move.imageUploadForm.querySelector(`.text__description`);
+  const uploadSubmit = window.move.imageUploadForm.querySelector(`#upload-submit`);
   const MAX_HASHTAGS_COUNT = 5;
   const MAX_DESCRIPTION_LENGTH = 140;
 
