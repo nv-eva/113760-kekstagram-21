@@ -47,5 +47,4 @@
   window.move.effectLevelPin = effectLevelPin;
   window.move.effectLevelDepth = effectLevelDepth;
   window.move.effectLevelValue = effectLevelValue;
-  window.move.EFFECT_LEVEL_WIDTH = EFFECT_LEVEL_WIDTH;
 })();

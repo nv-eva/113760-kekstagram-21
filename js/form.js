@@ -125,11 +125,9 @@
 
   const renderStartEffectLevel = function () {
     effectValue = START_EFFECT_VALUE;
-    window.move.effectLevelValue.value = START_EFFECT_VALUE;
-
-    const pinPositionStart = effectValue * window.move.EFFECT_LEVEL_WIDTH / 100;
-    window.move.effectLevelDepth.style.width = pinPositionStart + `px`;
-    window.move.effectLevelPin.style.left = pinPositionStart + `px`;
+    window.move.effectLevelValue.value = effectValue;
+    window.move.effectLevelDepth.style.width = effectValue + `%`;
+    window.move.effectLevelPin.style.left = effectValue + `%`;
   };
 
   const renderEffectValue = function (max, min) {
@@ -146,43 +144,38 @@
 
   const effectsChangeHandler = function (evt) {
     if (evt.target.matches(`input[type="radio"]`)) {
-      const effect = evt.target.value;
       renderStartEffectLevel();
       removeAllImageEffects();
-      imageUploadPreview.classList.add(`effects__preview--` + effect);
+      imageUploadPreview.classList.add(`effects__preview--` + evt.target.value);
 
-      window.move.effectLevelPin.removeEventListener(`mousedown`, function () {
-        window.move.onMouseDown(evt, changeEffectValue);
-      });
-
-      const changeEffectValue = function () {
-        effectValue = window.move.effectLevelValue.value;
-
-        if (effect === `chrome`) {
-          imageUploadPreview.style.filter = `grayscale(` + renderEffectValue(1, 0) + `)`;
-        } else if (effect === `sepia`) {
-          imageUploadPreview.style.filter = `sepia(` + renderEffectValue(1, 0) + `)`;
-        } else if (effect === `marvin`) {
-          imageUploadPreview.style.filter = `invert(` + renderEffectValue(100, 0) + `%)`;
-        } else if (effect === `phobos`) {
-          imageUploadPreview.style.filter = `blur(` + renderEffectValue(3, 0) + `px)`;
-        } else if (effect === `heat`) {
-          imageUploadPreview.style.filter = `brightness(` + renderEffectValue(3, 1) + `)`;
-        }
-      };
-
-      if (effect === `none`) {
+      if (evt.target.value === `none`) {
         uploadEffectLevel.classList.add(`hidden`);
       } else {
         uploadEffectLevel.classList.remove(`hidden`);
-        window.move.effectLevelPin.addEventListener(`mousedown`, function () {
-          window.move.onMouseDown(evt, changeEffectValue);
-        });
       }
     }
   };
 
+  const changeEffectValue = function () {
+    effectValue = window.move.effectLevelValue.value;
+
+    if (imageUploadPreview.classList.contains(`effects__preview--chrome`)) {
+      imageUploadPreview.style.filter = `grayscale(` + renderEffectValue(1, 0) + `)`;
+    } else if (imageUploadPreview.classList.contains(`effects__preview--sepia`)) {
+      imageUploadPreview.style.filter = `sepia(` + renderEffectValue(1, 0) + `)`;
+    } else if (imageUploadPreview.classList.contains(`effects__preview--marvin`)) {
+      imageUploadPreview.style.filter = `invert(` + renderEffectValue(100, 0) + `%)`;
+    } else if (imageUploadPreview.classList.contains(`effects__preview--phobos`)) {
+      imageUploadPreview.style.filter = `blur(` + renderEffectValue(3, 0) + `px)`;
+    } else if (imageUploadPreview.classList.contains(`effects__preview--heat`)) {
+      imageUploadPreview.style.filter = `brightness(` + renderEffectValue(3, 1) + `)`;
+    }
+  };
+
   window.move.imageUploadForm.addEventListener(`change`, effectsChangeHandler);
+  window.move.effectLevelPin.addEventListener(`mousedown`, function (evt) {
+    window.move.onMouseDown(evt, changeEffectValue);
+  });
 
 
   // Валидирует хэштеги и комментарии
