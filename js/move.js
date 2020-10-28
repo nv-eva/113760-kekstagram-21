@@ -8,6 +8,18 @@
 
   const EFFECT_LEVEL_WIDTH = 453;
 
+  const pinArrowMove = function (effectValue) {
+    if (effectValue > 100) {
+      effectValue = 100;
+    } else if (effectValue < 0) {
+      effectValue = 0;
+    }
+
+    effectLevelDepth.style.width = effectValue + `%`;
+    effectLevelPin.style.left = effectValue + `%`;
+    effectLevelValue.value = effectValue;
+  };
+
   window.move = {
     onMouseDown(evt, action) {
       evt.preventDefault();
@@ -40,6 +52,20 @@
 
       document.addEventListener(`mousemove`, onMouseMove);
       document.addEventListener(`mouseup`, onMouseUp);
+    },
+
+    onArrowRight(evt, action) {
+      if (evt.key === `ArrowRight`) {
+        pinArrowMove(Number(effectLevelValue.value) + 10);
+        action();
+      }
+    },
+
+    onArrowLeft(evt, action) {
+      if (evt.key === `ArrowLeft`) {
+        pinArrowMove(Number(effectLevelValue.value) - 10);
+        action();
+      }
     }
   };
 

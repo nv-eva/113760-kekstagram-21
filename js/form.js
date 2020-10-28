@@ -173,8 +173,17 @@
   };
 
   window.move.imageUploadForm.addEventListener(`change`, effectsChangeHandler);
+
   window.move.effectLevelPin.addEventListener(`mousedown`, function (evt) {
     window.move.onMouseDown(evt, changeEffectValue);
+  });
+
+  window.move.effectLevelPin.addEventListener(`keydown`, function (evt) {
+    window.move.onArrowLeft(evt, changeEffectValue);
+  });
+
+  window.move.effectLevelPin.addEventListener(`keydown`, function (evt) {
+    window.move.onArrowRight(evt, changeEffectValue);
   });
 
 
