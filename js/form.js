@@ -130,10 +130,6 @@
     window.move.effectLevelPin.style.left = effectValue + `%`;
   };
 
-  const renderEffectValue = function (max, min) {
-    return ((max + min) * effectValue * 0.01);
-  };
-
   const removeAllImageEffects = function () {
     const effects = window.move.imageUploadForm.querySelectorAll(`input[type="radio"]`);
     effects.forEach((item, i) => {
@@ -160,15 +156,15 @@
     effectValue = window.move.effectLevelValue.value;
 
     if (imageUploadPreview.classList.contains(`effects__preview--chrome`)) {
-      imageUploadPreview.style.filter = `grayscale(` + renderEffectValue(1, 0) + `)`;
+      imageUploadPreview.style.filter = `grayscale(` + effectValue * 0.01 + `)`;
     } else if (imageUploadPreview.classList.contains(`effects__preview--sepia`)) {
-      imageUploadPreview.style.filter = `sepia(` + renderEffectValue(1, 0) + `)`;
+      imageUploadPreview.style.filter = `sepia(` + effectValue * 0.01 + `)`;
     } else if (imageUploadPreview.classList.contains(`effects__preview--marvin`)) {
-      imageUploadPreview.style.filter = `invert(` + renderEffectValue(100, 0) + `%)`;
+      imageUploadPreview.style.filter = `invert(` + effectValue + `%)`;
     } else if (imageUploadPreview.classList.contains(`effects__preview--phobos`)) {
-      imageUploadPreview.style.filter = `blur(` + renderEffectValue(3, 0) + `px)`;
+      imageUploadPreview.style.filter = `blur(` + effectValue * 0.03 + `px)`;
     } else if (imageUploadPreview.classList.contains(`effects__preview--heat`)) {
-      imageUploadPreview.style.filter = `brightness(` + renderEffectValue(3, 1) + `)`;
+      imageUploadPreview.style.filter = `brightness(` + (0.3333 + effectValue / 133.33) * 3 + `)`;
     }
   };
 
