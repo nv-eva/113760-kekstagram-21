@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  const usersPhotos = document.querySelectorAll(`.picture`);
+  const photoListElement = document.querySelector(`.pictures`);
   const bigPictureCancel = window.bigPicture.querySelector(`#picture-cancel`);
 
   const onBigPictureEscPress = function (evt) {
@@ -31,20 +31,34 @@
     loaderComments.classList.add(`hidden`);
   };
 
-  for (let k = 0; k < usersPhotos.length; k++) {
-    const currentUserPhoto = usersPhotos[k];
+  const showBigPicture = function (photo) {
+    window.renderBigPicture(photo);
+    hideCounterComments();
+    openBigPicture();
+  };
 
-    const showBigPicture = function () {
-      window.renderBigPicture(window.photos[k]);
-      hideCounterComments();
-      openBigPicture();
-    };
+  const successRenderPicture = function (photos) {
+    const fragment = document.createDocumentFragment();
 
-    currentUserPhoto.addEventListener(`click`, showBigPicture);
-    currentUserPhoto.addEventListener(`keydown`, function (evt) {
-      window.main.isEnterEvent(evt, showBigPicture);
-    });
-  }
+    for (let i = 0; i < photos.length; i++) {
+      const currentPhoto = window.renderPicture(photos[i]);
+
+      currentPhoto.addEventListener(`click`, function () {
+        showBigPicture(photos[i]);
+      });
+      currentPhoto.addEventListener(`keydown`, function (evt) {
+        window.main.isEnterEvent(evt, function () {
+          showBigPicture(photos[i]);
+        });
+      });
+
+      fragment.appendChild(currentPhoto);
+    }
+
+    photoListElement.appendChild(fragment);
+  };
+
+  window.backend.load(successRenderPicture);
 
   bigPictureCancel.addEventListener(`click`, hideBigPicture);
   bigPictureCancel.addEventListener(`keydown`, function (evt) {
