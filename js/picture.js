@@ -13,9 +13,13 @@
     return photoElement;
   };
 
-  const fragment = document.createDocumentFragment();
-  for (let i = 0; i < window.photos.length; i++) {
-    fragment.appendChild(renderPicture(window.photos[i]));
-  }
-  photoListElement.appendChild(fragment);
+  const successRenderPicture = function (photos) {
+    const fragment = document.createDocumentFragment();
+    for (let i = 0; i < photos.length; i++) {
+      fragment.appendChild(renderPicture(photos[i]));
+    }
+    photoListElement.appendChild(fragment);
+  };
+
+  window.backend.load(successRenderPicture);
 })();
