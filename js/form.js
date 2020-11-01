@@ -253,9 +253,14 @@
     renderResponse(document.querySelector(`#success`).content.querySelector(`.success`));
   };
 
+  const errorUploadForm = function () {
+    closeUpload();
+    renderResponse(document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true));
+  };
+
   const submitHandler = function (evt) {
     evt.preventDefault();
-    window.backend.upload(new FormData(window.move.imageUploadForm), successUploadForm);
+    window.backend.upload(new FormData(window.move.imageUploadForm), successUploadForm, errorUploadForm);
   };
 
   window.move.imageUploadForm.addEventListener(`submit`, submitHandler);
