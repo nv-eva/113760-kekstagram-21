@@ -231,9 +231,11 @@
   });
 
   // Отправляет данные с формы на сервер
-  const renderResponse = function (template) {
+  const renderResponse = function (template, messageText) {
     const responseMessage = template.cloneNode(true);
     const responseButton = responseMessage.querySelector(`button`);
+
+    responseMessage.querySelector(`h2`).textContent = messageText;
 
     const closeMessage = function () {
       document.querySelector(`main`).removeChild(responseMessage);
@@ -250,12 +252,18 @@
 
   const successUploadForm = function () {
     closeUpload();
-    renderResponse(document.querySelector(`#success`).content.querySelector(`.success`));
+    renderResponse(
+        document.querySelector(`#success`).content.querySelector(`.success`),
+        `Изображение успешно загружено`
+    );
   };
 
-  const errorUploadForm = function () {
+  const errorUploadForm = function (errorMessage) {
     closeUpload();
-    renderResponse(document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true));
+    renderResponse(
+        document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true),
+        errorMessage
+    );
   };
 
   const submitHandler = function (evt) {

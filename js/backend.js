@@ -16,7 +16,7 @@
       if (xhr.status === StatusCode.OK) {
         onLoad(xhr.response);
       } else {
-        onError(`Статус ответа: ` + xhr.status + ` ` + xhr.statusText);
+        onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
       }
     });
 
@@ -24,7 +24,7 @@
       onError(`Произошла ошибка соединения`);
     });
     xhr.addEventListener(`timeout`, function () {
-      onError(`Запрос не успел выполниться за ` + xhr.timeout + `мс`);
+      onError(`Запрос не успел выполниться за\u00A0${xhr.timeout}\u00A0мс`);
     });
 
     xhr.timeout = TIMEOUT_IN_MS;
