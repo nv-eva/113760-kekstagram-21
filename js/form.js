@@ -28,6 +28,7 @@
     // Сбрасывает с превью изображения все эффекты
     renderStartEffectLevel();
     removeAllImageEffects();
+    imageUpload.querySelector(`[name=effect]`).checked = `none`;
     imageUploadPreview.classList.add(`effects__preview--none`);
     uploadEffectLevel.classList.add(`hidden`);
   };
