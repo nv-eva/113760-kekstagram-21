@@ -67,7 +67,7 @@
   };
 
   const renderImageScale = function () {
-    imageUploadPreview.style.transform = `scale(` + scaleValue + `)`;
+    imageUploadPreview.style.transform = `scale(${scaleValue})`;
   };
 
   const checkScaleControls = function () {
@@ -133,7 +133,7 @@
   const removeAllImageEffects = function () {
     const effects = window.move.imageUploadForm.querySelectorAll(`input[type="radio"]`);
     effects.forEach((item, i) => {
-      imageUploadPreview.classList.remove(`effects__preview--` + effects[i].value);
+      imageUploadPreview.classList.remove(`effects__preview--${effects[i].value}`);
     });
     imageUploadPreview.style.filter = ``;
   };
@@ -142,7 +142,7 @@
     if (evt.target.matches(`input[type="radio"]`)) {
       renderStartEffectLevel();
       removeAllImageEffects();
-      imageUploadPreview.classList.add(`effects__preview--` + evt.target.value);
+      imageUploadPreview.classList.add(`effects__preview--${evt.target.value}`);
 
       if (evt.target.value === `none`) {
         uploadEffectLevel.classList.add(`hidden`);
@@ -156,15 +156,15 @@
     effectValue = window.move.effectLevelValue.value;
 
     if (imageUploadPreview.classList.contains(`effects__preview--chrome`)) {
-      imageUploadPreview.style.filter = `grayscale(` + effectValue * 0.01 + `)`;
+      imageUploadPreview.style.filter = `grayscale(${effectValue * 0.01})`;
     } else if (imageUploadPreview.classList.contains(`effects__preview--sepia`)) {
-      imageUploadPreview.style.filter = `sepia(` + effectValue * 0.01 + `)`;
+      imageUploadPreview.style.filter = `sepia(${effectValue * 0.01})`;
     } else if (imageUploadPreview.classList.contains(`effects__preview--marvin`)) {
-      imageUploadPreview.style.filter = `invert(` + effectValue + `%)`;
+      imageUploadPreview.style.filter = `invert(${effectValue}%)`;
     } else if (imageUploadPreview.classList.contains(`effects__preview--phobos`)) {
-      imageUploadPreview.style.filter = `blur(` + effectValue * 0.03 + `px)`;
+      imageUploadPreview.style.filter = `blur(${effectValue * 0.03}px)`;
     } else if (imageUploadPreview.classList.contains(`effects__preview--heat`)) {
-      imageUploadPreview.style.filter = `brightness(` + (0.3333 + effectValue / 133.33) * 3 + `)`;
+      imageUploadPreview.style.filter = `brightness(${(0.3333 + effectValue / 133.33) * 3})`;
     }
   };
 
@@ -195,7 +195,7 @@
     const regularHashtag = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
 
     if (hashtags.length > MAX_HASHTAGS_COUNT) {
-      textHashtags.setCustomValidity(`Используйте не более ` + MAX_HASHTAGS_COUNT + ` хэш-тегов`);
+      textHashtags.setCustomValidity(`Используйте не более ${MAX_HASHTAGS_COUNT} хэш-тегов`);
     } else if ((new Set(hashtags)).size < hashtags.length) {
       textHashtags.setCustomValidity(`Хэш-теги не должны повторяться`);
     } else {
@@ -221,7 +221,7 @@
     const descriptionLength = textDescription.value.length;
 
     if (descriptionLength > MAX_DESCRIPTION_LENGTH) {
-      textDescription.setCustomValidity(`Сообщение слишком длинное. Удалите лишние ` + (descriptionLength - MAX_DESCRIPTION_LENGTH) + ` симв.`);
+      textDescription.setCustomValidity(`Сообщение слишком длинное. Удалите лишние ${descriptionLength - MAX_DESCRIPTION_LENGTH} симв.`);
     } else {
       textDescription.setCustomValidity(``);
     }
