@@ -231,8 +231,26 @@
   });
 
   // Отправляет данные с формы на сервер
+  const renderResponse = function (template) {
+    const responseMessage = template.cloneNode(true);
+    const responseButton = responseMessage.querySelector(`button`);
+
+    const closeMessage = function () {
+      document.querySelector(`main`).removeChild(responseMessage);
+    };
+
+    responseButton.addEventListener(`click`, closeMessage);
+    document.addEventListener(`click`, closeMessage);
+    document.addEventListener(`keydown`, function (evt) {
+      window.main.isEscapeEvent(evt, closeMessage);
+    });
+
+    document.querySelector(`main`).appendChild(responseMessage);
+  };
+
   const successUploadForm = function () {
     closeUpload();
+    renderResponse(document.querySelector(`#success`).content.querySelector(`.success`));
   };
 
   const submitHandler = function (evt) {
