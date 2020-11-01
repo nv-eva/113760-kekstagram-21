@@ -20,7 +20,7 @@
     imageUploadOverlay.classList.remove(`hidden`);
     document.addEventListener(`keydown`, onPopupEscPress);
     window.main.fixBody();
-    // Прописывает загруженному превью изображения рамер 100%
+    // Возвращает размер изображения к 100%
     scaleValue = 1;
     renderScaleControlValue();
     renderImageScale();
@@ -228,4 +228,16 @@
 
     textDescription.reportValidity();
   });
+
+  // Отправляет данные с формы на сервер
+  const successUploadForm = function () {
+    closeUpload();
+  };
+
+  const submitHandler = function (evt) {
+    evt.preventDefault();
+    window.backend.upload(new FormData(window.move.imageUploadForm), successUploadForm);
+  };
+
+  window.move.imageUploadForm.addEventListener(`submit`, submitHandler);
 })();
