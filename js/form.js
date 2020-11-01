@@ -238,7 +238,7 @@
     responseMessage.querySelector(`h2`).textContent = messageText;
 
     const closeMessage = function () {
-      document.querySelector(`main`).removeChild(responseMessage);
+      responseMessage.remove();
     };
 
     responseButton.addEventListener(`click`, closeMessage);
