@@ -20,7 +20,7 @@
     imageUploadOverlay.classList.remove(`hidden`);
     document.addEventListener(`keydown`, onPopupEscPress);
     window.main.fixBody();
-    // Прописывает загруженному превью изображения рамер 100%
+    // Возвращает размер изображения к 100%
     scaleValue = 1;
     renderScaleControlValue();
     renderImageScale();
@@ -28,6 +28,7 @@
     // Сбрасывает с превью изображения все эффекты
     renderStartEffectLevel();
     removeAllImageEffects();
+    imageUpload.querySelector(`[name=effect]`).checked = `none`;
     imageUploadPreview.classList.add(`effects__preview--none`);
     uploadEffectLevel.classList.add(`hidden`);
   };
@@ -228,4 +229,47 @@
 
     textDescription.reportValidity();
   });
+
+  // Отправляет данные с формы на сервер
+  const renderResponse = function (template, messageText) {
+    const responseMessage = template.cloneNode(true);
+    const responseButton = responseMessage.querySelector(`button`);
+
+    responseMessage.querySelector(`h2`).textContent = messageText;
+
+    const closeMessage = function () {
+      responseMessage.remove();
+    };
+
+    responseButton.addEventListener(`click`, closeMessage);
+    document.addEventListener(`click`, closeMessage);
+    document.addEventListener(`keydown`, function (evt) {
+      window.main.isEscapeEvent(evt, closeMessage);
+    });
+
+    document.querySelector(`main`).appendChild(responseMessage);
+  };
+
+  const successUploadForm = function () {
+    closeUpload();
+    renderResponse(
+        document.querySelector(`#success`).content.querySelector(`.success`),
+        `Изображение успешно загружено`
+    );
+  };
+
+  const errorUploadForm = function (errorMessage) {
+    closeUpload();
+    renderResponse(
+        document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true),
+        errorMessage
+    );
+  };
+
+  const submitHandler = function (evt) {
+    evt.preventDefault();
+    window.backend.upload(new FormData(window.move.imageUploadForm), successUploadForm, errorUploadForm);
+  };
+
+  window.move.imageUploadForm.addEventListener(`submit`, submitHandler);
 })();
