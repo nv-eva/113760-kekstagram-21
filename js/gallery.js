@@ -37,7 +37,7 @@
     openBigPicture();
   };
 
-  const successRenderPicture = function (photos) {
+  const renderPictures = function (photos) {
     const fragment = document.createDocumentFragment();
 
     for (let i = 0; i < photos.length; i++) {
@@ -56,11 +56,29 @@
     }
 
     photoListElement.appendChild(fragment);
+  };
 
+  let userPhotos = [];
+
+  const removePhotos = function () {
+    document.querySelectorAll(`.picture`).forEach((item) => {
+      item.remove();
+    });
+  };
+
+  const updatePhotos = function () {
+    removePhotos();
+    // Фильтрация
+    renderPictures(userPhotos);
+  };
+
+  const successRender = function (data) {
+    userPhotos = data;
+    updatePhotos();
     window.filters.showFilters();
   };
 
-  window.backend.load(successRenderPicture);
+  window.backend.load(successRender);
 
   bigPictureCancel.addEventListener(`click`, hideBigPicture);
   bigPictureCancel.addEventListener(`keydown`, function (evt) {
