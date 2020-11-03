@@ -56,6 +56,8 @@
     }
 
     photoListElement.appendChild(fragment);
+
+    document.querySelector(`.img-filters`).classList.remove(`img-filters--inactive`);
   };
 
   window.backend.load(successRenderPicture);
