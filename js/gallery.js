@@ -68,7 +68,7 @@
 
   const updatePhotos = function () {
     removePhotos();
-    // Фильтрация
+    window.filters.onChangeFilters(userPhotos);
     renderPictures(userPhotos);
   };
 
@@ -84,4 +84,6 @@
   bigPictureCancel.addEventListener(`keydown`, function (evt) {
     window.main.isEnterEvent(evt, hideBigPicture);
   });
+
+  window.gallery.updatePhotos = updatePhotos;
 })();
