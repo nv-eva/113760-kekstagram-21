@@ -37,6 +37,9 @@
     openBigPicture();
   };
 
+  // Отрисовывает фотографии на странице
+  let userPhotos = [];
+
   const renderPictures = function (photos) {
     const fragment = document.createDocumentFragment();
 
@@ -58,8 +61,6 @@
     photoListElement.appendChild(fragment);
   };
 
-  let userPhotos = [];
-
   const removePhotos = function () {
     document.querySelectorAll(`.picture`).forEach((item) => {
       item.remove();
@@ -68,14 +69,34 @@
 
   const updatePhotos = function () {
     removePhotos();
-    window.filters.onChangeFilters(userPhotos);
-    renderPictures(userPhotos);
+    const filtredPhotos = userPhotos.slice();
+    renderPictures(window.filters.onChangeFilters(filtredPhotos));
+  };
+
+  const filterButtons = window.filters.imageFilters.querySelectorAll(`.img-filters__button`);
+
+  const removeActiveClass = function () {
+    filterButtons.forEach((item) => {
+      item.classList.remove(`img-filters__button--active`);
+    });
+  };
+
+  const showFilters = function () {
+    window.filters.imageFilters.classList.remove(`img-filters--inactive`);
+
+    filterButtons.forEach((item) => {
+      item.addEventListener(`click`, function () {
+        removeActiveClass();
+        item.classList.add(`img-filters__button--active`);
+        updatePhotos();
+      });
+    });
   };
 
   const successRender = function (data) {
     userPhotos = data;
-    updatePhotos();
-    window.filters.showFilters();
+    renderPictures(userPhotos);
+    showFilters();
   };
 
   window.backend.load(successRender);
@@ -84,6 +105,4 @@
   bigPictureCancel.addEventListener(`keydown`, function (evt) {
     window.main.isEnterEvent(evt, hideBigPicture);
   });
-
-  window.gallery.updatePhotos = updatePhotos;
 })();
