@@ -88,7 +88,9 @@
       item.addEventListener(`click`, function () {
         removeActiveClass();
         item.classList.add(`img-filters__button--active`);
-        updatePhotos();
+        window.debounce(function () {
+          updatePhotos();
+        })();
       });
     });
   };
