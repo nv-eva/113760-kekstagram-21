@@ -7,30 +7,30 @@
 
   const COUNT_PHOTOS = 10;
 
-  const shuffle = function (array) {
+  const shuffle = function (elements) {
     let j;
     let element;
 
-    for (let i = array.length - 1; i > 0; i--) {
+    for (let i = elements.length - 1; i > 0; i--) {
       j = Math.floor(Math.random() * (i + 1));
-      element = array[i];
-      array[i] = array[j];
-      array[j] = element;
+      element = elements[i];
+      elements[i] = elements[j];
+      elements[j] = element;
     }
-    return array;
+    return elements;
   };
 
   window.filters = {
-    onChangeFilters(array) {
+    onChangeFilters(photos) {
       if (filterRandom.classList.contains(`img-filters__button--active`)) {
-        array = shuffle(array);
-        array.length = array.length < COUNT_PHOTOS ? array.length : COUNT_PHOTOS;
+        photos = shuffle(photos);
+        photos.length = photos.length < COUNT_PHOTOS ? photos.length : COUNT_PHOTOS;
       } else if (filterDiscussed.classList.contains(`img-filters__button--active`)) {
-        array.sort(function (left, right) {
+        photos.sort(function (left, right) {
           return right.comments.length - left.comments.length;
         });
       }
-      return array;
+      return photos;
     }
   };
 
