@@ -37,7 +37,10 @@
     openBigPicture();
   };
 
-  const successRenderPicture = function (photos) {
+  // Отрисовывает фотографии на странице
+  let userPhotos = [];
+
+  const renderPictures = function (photos) {
     const fragment = document.createDocumentFragment();
 
     for (let i = 0; i < photos.length; i++) {
@@ -58,7 +61,47 @@
     photoListElement.appendChild(fragment);
   };
 
-  window.backend.load(successRenderPicture);
+  const removePhotos = function () {
+    document.querySelectorAll(`.picture`).forEach((item) => {
+      item.remove();
+    });
+  };
+
+  const updatePhotos = function () {
+    removePhotos();
+    const filtredPhotos = userPhotos.slice();
+    renderPictures(window.filters.onChangeFilters(filtredPhotos));
+  };
+
+  const filterButtons = window.filters.imageFilters.querySelectorAll(`.img-filters__button`);
+
+  const removeActiveClass = function () {
+    filterButtons.forEach((item) => {
+      item.classList.remove(`img-filters__button--active`);
+    });
+  };
+
+  const showFilters = function () {
+    window.filters.imageFilters.classList.remove(`img-filters--inactive`);
+
+    filterButtons.forEach((item) => {
+      item.addEventListener(`click`, function () {
+        removeActiveClass();
+        item.classList.add(`img-filters__button--active`);
+        window.debounce(function () {
+          updatePhotos();
+        })();
+      });
+    });
+  };
+
+  const successRender = function (data) {
+    userPhotos = data;
+    renderPictures(userPhotos);
+    showFilters();
+  };
+
+  window.backend.load(successRender);
 
   bigPictureCancel.addEventListener(`click`, hideBigPicture);
   bigPictureCancel.addEventListener(`keydown`, function (evt) {
