@@ -192,7 +192,7 @@
   const MAX_DESCRIPTION_LENGTH = 140;
 
   const validationHashtags = function () {
-    const hashtags = textHashtags.value.split(` `);
+    const hashtags = textHashtags.value.toLowerCase().split(` `);
     const regularHashtag = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
 
     if (hashtags.length > MAX_HASHTAGS_COUNT) {
