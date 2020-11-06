@@ -27,15 +27,9 @@
     return photoComment;
   };
 
-  /*
-  const hideCounterComments = function () {
-    const counterComments = window.bigPicture.querySelector(`.social__comment-count`);
-    counterComments.classList.add(`hidden`);
-  };
-  */
-
-  const updateComments = function (comments) {
+  const updateComments = function (comments, allCommentsCount) {
     let fragmentLength;
+    let loadCommentsCount;
 
     if (comments.length <= COUNT_COMMENTS) {
       fragmentLength = comments.length;
@@ -45,28 +39,35 @@
       loaderComments.classList.remove(`hidden`);
     }
 
+    // Вставляет комментарии
     const photoComments = document.createDocumentFragment();
     for (let i = 0; i < fragmentLength; i++) {
-      const comment = renderComment(comments[0]);
-      photoComments.appendChild(comment);
+      photoComments.appendChild(renderComment(comments[0]));
       comments.shift();
     }
     commentsList.appendChild(photoComments);
+
+    // Изменяет текст счетчика
+    loadCommentsCount = allCommentsCount - comments.length;
+    let elements = (allCommentsCount % 10 === 1 && allCommentsCount !== 11)
+      ? `комментария`
+      : `комментариев`;
+    bigPicture.querySelector(`.social__comment-count`).textContent = `${loadCommentsCount} из ${allCommentsCount} ${elements}`;
   };
 
   window.renderBigPicture = function (photo) {
     bigPicture.querySelector(`.big-picture__img img`).src = photo.url;
     bigPicture.querySelector(`.likes-count`).textContent = photo.likes;
-    bigPicture.querySelector(`.comments-count`).textContent = photo.comments.length;
     bigPicture.querySelector(`.social__caption`).textContent = photo.description;
 
     commentsList.textContent = ``;
 
+    const countComments = photo.comments.length;
     const loadComments = photo.comments.slice();
 
-    updateComments(loadComments);
+    updateComments(loadComments, countComments);
     loaderComments.addEventListener(`click`, function () {
-      updateComments(loadComments);
+      updateComments(loadComments, countComments);
     });
   };
 
