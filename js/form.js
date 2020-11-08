@@ -191,7 +191,7 @@
   const MAX_HASHTAGS_COUNT = 5;
   const MAX_DESCRIPTION_LENGTH = 140;
 
-  const validationHashtags = function () {
+  const validateHashtags = function () {
     const hashtags = textHashtags.value.toLowerCase().split(` `);
     const regularHashtag = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
 
@@ -212,7 +212,7 @@
     textHashtags.reportValidity();
   };
 
-  const validationDescription = function () {
+  const validateDescription = function () {
     const descriptionLength = textDescription.value.length;
 
     if (descriptionLength > MAX_DESCRIPTION_LENGTH) {
@@ -224,17 +224,17 @@
     textDescription.reportValidity();
   };
 
-  const validation = function () {
-    validationHashtags();
-    validationDescription();
+  const validateForm = function () {
+    validateHashtags();
+    validateDescription();
   };
 
-  textHashtags.addEventListener(`input`, validationHashtags);
-  textDescription.addEventListener(`input`, validationDescription);
+  textHashtags.addEventListener(`input`, validateHashtags);
+  textDescription.addEventListener(`input`, validateDescription);
 
-  uploadSubmit.addEventListener(`click`, validation);
+  uploadSubmit.addEventListener(`click`, validateForm);
   uploadSubmit.addEventListener(`keydown`, function (evt) {
-    window.main.isEnterEvent(evt, validation);
+    window.main.isEnterEvent(evt, validateForm);
   });
 
 
