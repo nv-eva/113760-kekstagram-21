@@ -239,11 +239,12 @@
 
 
   // Отправляет данные с формы на сервер
-  const renderResponse = function (template, messageText) {
+  const renderResponse = function (template, messageText, buttonText) {
     const responseMessage = template.cloneNode(true);
     const responseButton = responseMessage.querySelector(`button`);
 
     responseMessage.querySelector(`h2`).textContent = messageText;
+    responseButton.textContent = buttonText;
 
     const closeMessage = function () {
       responseMessage.remove();
@@ -262,7 +263,7 @@
     closeUpload();
     renderResponse(
         document.querySelector(`#success`).content.querySelector(`.success`),
-        `Изображение успешно загружено`
+        `Изображение успешно загружено`, `Круто!`
     );
   };
 
@@ -270,7 +271,7 @@
     closeUpload();
     renderResponse(
         document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true),
-        errorMessage
+        errorMessage, `Попробовать загрузить другой файл`
     );
   };
 
@@ -280,4 +281,7 @@
   };
 
   window.move.imageUploadForm.addEventListener(`submit`, submitHandler);
+
+
+  window.renderResponse = renderResponse;
 })();

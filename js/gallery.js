@@ -92,7 +92,14 @@
     showFilters();
   };
 
-  window.backend.load(successRender);
+  const errorRender = function (errorMessage) {
+    window.renderResponse(
+        document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true),
+        errorMessage, `ОК`
+    );
+  };
+
+  window.backend.load(successRender, errorRender);
 
   bigPictureCancel.addEventListener(`click`, hideBigPicture);
   bigPictureCancel.addEventListener(`keydown`, function (evt) {
