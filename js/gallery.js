@@ -21,6 +21,8 @@
     window.bigPicture.classList.add(`hidden`);
     document.removeEventListener(`keydown`, onBigPictureEscPress);
     window.main.unfixBody();
+
+    window.bigPicture.querySelector(`.social__footer-text`).value = ``;
   };
 
   const showBigPicture = function (photo) {
