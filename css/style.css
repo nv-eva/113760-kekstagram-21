@@ -744,6 +744,21 @@ main {
   border-radius: 5px;
 }
 
+.text__hashtags:focus,
+.text__description:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 2px black,
+    0 0 0 4px white;
+}
+
+.text__hashtags:invalid,
+.text__description:invalid {
+  outline: none;
+  box-shadow:
+    0 0 0 2px black,
+    0 0 0 4px crimson;
+}
 
 /**
  * Кнопка для отправки изображения

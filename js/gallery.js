@@ -21,6 +21,8 @@
     window.bigPicture.classList.add(`hidden`);
     document.removeEventListener(`keydown`, onBigPictureEscPress);
     window.main.unfixBody();
+
+    window.bigPicture.querySelector(`.social__footer-text`).value = ``;
   };
 
   const showBigPicture = function (photo) {
@@ -92,7 +94,14 @@
     showFilters();
   };
 
-  window.backend.load(successRender);
+  const errorRender = function (errorMessage) {
+    window.renderResponse(
+        document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true),
+        errorMessage, `ОК`
+    );
+  };
+
+  window.backend.load(successRender, errorRender);
 
   bigPictureCancel.addEventListener(`click`, hideBigPicture);
   bigPictureCancel.addEventListener(`keydown`, function (evt) {

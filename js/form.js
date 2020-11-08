@@ -191,7 +191,7 @@
   const MAX_HASHTAGS_COUNT = 5;
   const MAX_DESCRIPTION_LENGTH = 140;
 
-  const validationHashtags = function () {
+  const validateHashtags = function () {
     const hashtags = textHashtags.value.toLowerCase().split(` `);
     const regularHashtag = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
 
@@ -200,8 +200,8 @@
     } else if ((new Set(hashtags)).size < hashtags.length) {
       textHashtags.setCustomValidity(`Хэш-теги не должны повторяться`);
     } else {
-      hashtags.forEach((item, i) => {
-        if (!regularHashtag.test(hashtags[i]) && textHashtags.value !== ``) {
+      hashtags.forEach((item) => {
+        if (!regularHashtag.test(item) && textHashtags.value !== ``) {
           textHashtags.setCustomValidity(`Введите корректный хэш-тег`);
         } else {
           textHashtags.setCustomValidity(``);
@@ -212,13 +212,7 @@
     textHashtags.reportValidity();
   };
 
-  textHashtags.addEventListener(`input`, validationHashtags);
-  uploadSubmit.addEventListener(`click`, validationHashtags);
-  uploadSubmit.addEventListener(`keydown`, function (evt) {
-    window.main.isEnterEvent(evt, validationHashtags);
-  });
-
-  textDescription.addEventListener(`input`, function () {
+  const validateDescription = function () {
     const descriptionLength = textDescription.value.length;
 
     if (descriptionLength > MAX_DESCRIPTION_LENGTH) {
@@ -228,14 +222,29 @@
     }
 
     textDescription.reportValidity();
+  };
+
+  const validateForm = function () {
+    validateHashtags();
+    validateDescription();
+  };
+
+  textHashtags.addEventListener(`input`, validateHashtags);
+  textDescription.addEventListener(`input`, validateDescription);
+
+  uploadSubmit.addEventListener(`click`, validateForm);
+  uploadSubmit.addEventListener(`keydown`, function (evt) {
+    window.main.isEnterEvent(evt, validateForm);
   });
 
+
   // Отправляет данные с формы на сервер
-  const renderResponse = function (template, messageText) {
+  const renderResponse = function (template, messageText, buttonText) {
     const responseMessage = template.cloneNode(true);
     const responseButton = responseMessage.querySelector(`button`);
 
     responseMessage.querySelector(`h2`).textContent = messageText;
+    responseButton.textContent = buttonText;
 
     const closeMessage = function () {
       responseMessage.remove();
@@ -254,7 +263,7 @@
     closeUpload();
     renderResponse(
         document.querySelector(`#success`).content.querySelector(`.success`),
-        `Изображение успешно загружено`
+        `Изображение успешно загружено`, `Круто!`
     );
   };
 
@@ -262,7 +271,7 @@
     closeUpload();
     renderResponse(
         document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true),
-        errorMessage
+        errorMessage, `Попробовать загрузить другой файл`
     );
   };
 
@@ -272,4 +281,7 @@
   };
 
   window.move.imageUploadForm.addEventListener(`submit`, submitHandler);
+
+
+  window.renderResponse = renderResponse;
 })();
