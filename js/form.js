@@ -200,8 +200,8 @@
     } else if ((new Set(hashtags)).size < hashtags.length) {
       textHashtags.setCustomValidity(`Хэш-теги не должны повторяться`);
     } else {
-      hashtags.forEach((item, i) => {
-        if (!regularHashtag.test(hashtags[i]) && textHashtags.value !== ``) {
+      hashtags.forEach((item) => {
+        if (!regularHashtag.test(item) && textHashtags.value !== ``) {
           textHashtags.setCustomValidity(`Введите корректный хэш-тег`);
         } else {
           textHashtags.setCustomValidity(``);
@@ -212,13 +212,7 @@
     textHashtags.reportValidity();
   };
 
-  textHashtags.addEventListener(`input`, validationHashtags);
-  uploadSubmit.addEventListener(`click`, validationHashtags);
-  uploadSubmit.addEventListener(`keydown`, function (evt) {
-    window.main.isEnterEvent(evt, validationHashtags);
-  });
-
-  textDescription.addEventListener(`input`, function () {
+  const validationDescription = function () {
     const descriptionLength = textDescription.value.length;
 
     if (descriptionLength > MAX_DESCRIPTION_LENGTH) {
@@ -228,7 +222,21 @@
     }
 
     textDescription.reportValidity();
+  };
+
+  const validation = function () {
+    validationHashtags();
+    validationDescription();
+  };
+
+  textHashtags.addEventListener(`input`, validationHashtags);
+  textDescription.addEventListener(`input`, validationDescription);
+
+  uploadSubmit.addEventListener(`click`, validation);
+  uploadSubmit.addEventListener(`keydown`, function (evt) {
+    window.main.isEnterEvent(evt, validation);
   });
+
 
   // Отправляет данные с формы на сервер
   const renderResponse = function (template, messageText) {
