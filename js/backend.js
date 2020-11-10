@@ -2,11 +2,11 @@
 
 const URL_LOAD = `https://21.javascript.pages.academy/kekstagram/data`;
 const URL_SAVE = `https://21.javascript.pages.academy/kekstagram`;
+const TIMEOUT_IN_MS = 10000;
 
 const StatusCode = {
   OK: 200
 };
-const TIMEOUT_IN_MS = 10000;
 
 const getBackendResponse = function (onLoad, onError, method, url, data) {
   const xhr = new XMLHttpRequest();

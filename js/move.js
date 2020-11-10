@@ -1,11 +1,11 @@
 'use strict';
 
+const EFFECT_LEVEL_WIDTH = 453;
+
 const imageUploadForm = document.querySelector(`.img-upload__form`);
 const effectLevelValue = imageUploadForm.querySelector(`.effect-level__value`);
 const effectLevelDepth = imageUploadForm.querySelector(`.effect-level__depth`);
 const effectLevelPin = imageUploadForm.querySelector(`.effect-level__pin`);
-
-const EFFECT_LEVEL_WIDTH = 453;
 
 const pinArrowMove = function (effectValue) {
   if (effectValue > 100) {

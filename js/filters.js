@@ -1,10 +1,10 @@
 'use strict';
 
+const COUNT_PHOTOS = 10;
+
 const imageFilters = document.querySelector(`.img-filters`);
 const filterRandom = imageFilters.querySelector(`#filter-random`);
 const filterDiscussed = imageFilters.querySelector(`#filter-discussed`);
-
-const COUNT_PHOTOS = 10;
 
 const shuffle = function (elements) {
   let j;

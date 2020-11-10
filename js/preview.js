@@ -1,10 +1,10 @@
 'use strict';
 
+const COUNT_COMMENTS = 5;
+
 const bigPicture = document.querySelector(`.big-picture`);
 const commentsList = bigPicture.querySelector(`.social__comments`);
 const loaderComments = bigPicture.querySelector(`.comments-loader`);
-
-const COUNT_COMMENTS = 5;
 
 const renderComment = function (comment) {
   const photoComment = document.createElement(`li`);

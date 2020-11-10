@@ -1,5 +1,12 @@
 'use strict';
 
+const MIN_SCALE = 25;
+const MAX_SCALE = 100;
+const SCALE_STEP = 25;
+const START_EFFECT_VALUE = 100;
+const MAX_HASHTAGS_COUNT = 5;
+const MAX_DESCRIPTION_LENGTH = 140;
+
 // Показывает и скрывает окно загрузки фото
 const imageUpload = document.querySelector(`.img-upload`);
 const imageUploadOverlay = imageUpload.querySelector(`.img-upload__overlay`);
@@ -56,9 +63,6 @@ const scaleControlBigger = imageUpload.querySelector(`.scale__control--bigger`);
 const scaleControlValue = imageUpload.querySelector(`.scale__control--value`);
 const imageUploadPreview = imageUpload.querySelector(`.img-upload__preview img`);
 
-const MIN_SCALE = 25;
-const MAX_SCALE = 100;
-const SCALE_STEP = 25;
 let scaleStep = SCALE_STEP * 0.01;
 let scaleValue = 1;
 
@@ -120,7 +124,6 @@ scaleControlValue.addEventListener(`keydown`, function (evt) {
 // Применяет эффекты к изображению
 const uploadEffectLevel = window.move.imageUploadForm.querySelector(`.img-upload__effect-level`);
 
-const START_EFFECT_VALUE = 100;
 let effectValue = START_EFFECT_VALUE;
 
 const renderStartEffectLevel = function () {
@@ -187,8 +190,6 @@ window.move.effectLevelPin.addEventListener(`keydown`, function (evt) {
 const textHashtags = window.move.imageUploadForm.querySelector(`.text__hashtags`);
 const textDescription = window.move.imageUploadForm.querySelector(`.text__description`);
 const uploadSubmit = window.move.imageUploadForm.querySelector(`#upload-submit`);
-const MAX_HASHTAGS_COUNT = 5;
-const MAX_DESCRIPTION_LENGTH = 140;
 
 const validateHashtags = function () {
   const hashtags = textHashtags.value.toLowerCase().split(` `);
