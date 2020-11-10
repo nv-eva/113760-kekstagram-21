@@ -8,7 +8,7 @@ const StatusCode = {
 };
 const TIMEOUT_IN_MS = 10000;
 
-const backendResponse = function (onLoad, onError, method, url, data) {
+const getBackendResponse = function (onLoad, onError, method, url, data) {
   const xhr = new XMLHttpRequest();
   xhr.responseType = `json`;
 
@@ -35,10 +35,10 @@ const backendResponse = function (onLoad, onError, method, url, data) {
 
 window.backend = {
   load(onLoad, onError) {
-    backendResponse(onLoad, onError, `GET`, URL_LOAD);
+    getBackendResponse(onLoad, onError, `GET`, URL_LOAD);
   },
 
   upload(data, onLoad, onError) {
-    backendResponse(onLoad, onError, `POST`, URL_SAVE, data);
+    getBackendResponse(onLoad, onError, `POST`, URL_SAVE, data);
   }
 };
