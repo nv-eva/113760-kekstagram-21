@@ -20,7 +20,7 @@ const shuffle = function (elements) {
 };
 
 window.filters = {
-  onChangeFilters(photos) {
+  onFiltersChange(photos) {
     if (filterRandom.classList.contains(`img-filters__button--active`)) {
       photos = shuffle(photos);
       photos.length = photos.length < COUNT_PHOTOS ? photos.length : COUNT_PHOTOS;

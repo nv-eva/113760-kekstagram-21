@@ -18,11 +18,11 @@ const onPopupEscPress = function (evt) {
     && document.activeElement !== textDescription
     && document.activeElement !== textHashtags) {
     evt.preventDefault();
-    closeUpload();
+    onUploadCancelClick();
   }
 };
 
-const openUpload = function () {
+const onFileLoad = function () {
   imageUploadOverlay.classList.remove(`hidden`);
   document.addEventListener(`keydown`, onPopupEscPress);
   window.main.fixBody();
@@ -39,7 +39,7 @@ const openUpload = function () {
   uploadEffectLevel.classList.add(`hidden`);
 };
 
-const closeUpload = function () {
+const onUploadCancelClick = function () {
   imageUploadOverlay.classList.add(`hidden`);
   document.removeEventListener(`keydown`, onPopupEscPress);
   window.main.unfixBody();
@@ -49,11 +49,11 @@ const closeUpload = function () {
   textHashtags.value = ``;
 };
 
-uploadOpenFile.addEventListener(`change`, openUpload);
+uploadOpenFile.addEventListener(`change`, onFileLoad);
 
-uploadCancel.addEventListener(`click`, closeUpload);
+uploadCancel.addEventListener(`click`, onUploadCancelClick);
 uploadCancel.addEventListener(`keydown`, function (evt) {
-  window.main.isEnterEvent(evt, closeUpload);
+  window.main.isEnterEvent(evt, onUploadCancelClick);
 });
 
 
@@ -92,7 +92,7 @@ const checkScaleControls = function () {
   }
 };
 
-const makeScaleSmaller = function () {
+const onScaleControlSmallerClick = function () {
   if (scaleValue - scaleStep >= MIN_SCALE * 0.01) {
     scaleValue -= scaleStep;
     renderScaleControlValue();
@@ -101,7 +101,7 @@ const makeScaleSmaller = function () {
   }
 };
 
-const makeScaleBigger = function () {
+const onScaleControlBiggerClick = function () {
   if (scaleValue + scaleStep <= MAX_SCALE * 0.01) {
     scaleValue += scaleStep;
     renderScaleControlValue();
@@ -110,14 +110,14 @@ const makeScaleBigger = function () {
   }
 };
 
-scaleControlSmaller.addEventListener(`click`, makeScaleSmaller);
+scaleControlSmaller.addEventListener(`click`, onScaleControlSmallerClick);
 scaleControlValue.addEventListener(`keydown`, function (evt) {
-  window.main.isLeftEvent(evt, makeScaleSmaller);
+  window.main.isLeftEvent(evt, onScaleControlSmallerClick);
 });
 
-scaleControlBigger.addEventListener(`click`, makeScaleBigger);
+scaleControlBigger.addEventListener(`click`, onScaleControlBiggerClick);
 scaleControlValue.addEventListener(`keydown`, function (evt) {
-  window.main.isRightEvent(evt, makeScaleBigger);
+  window.main.isRightEvent(evt, onScaleControlBiggerClick);
 });
 
 
@@ -189,9 +189,8 @@ window.move.effectLevelPin.addEventListener(`keydown`, function (evt) {
 // Валидирует хэштеги и комментарии
 const textHashtags = window.move.imageUploadForm.querySelector(`.text__hashtags`);
 const textDescription = window.move.imageUploadForm.querySelector(`.text__description`);
-const uploadSubmit = window.move.imageUploadForm.querySelector(`#upload-submit`);
 
-const validateHashtags = function () {
+const onHashtagsInput = function () {
   const hashtags = textHashtags.value.toLowerCase().split(` `);
   const regularHashtag = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
 
@@ -212,7 +211,7 @@ const validateHashtags = function () {
   textHashtags.reportValidity();
 };
 
-const validateDescription = function () {
+const onDescriptionInput = function () {
   const descriptionLength = textDescription.value.length;
 
   if (descriptionLength > MAX_DESCRIPTION_LENGTH) {
@@ -224,18 +223,8 @@ const validateDescription = function () {
   textDescription.reportValidity();
 };
 
-const validateForm = function () {
-  validateHashtags();
-  validateDescription();
-};
-
-textHashtags.addEventListener(`input`, validateHashtags);
-textDescription.addEventListener(`input`, validateDescription);
-
-uploadSubmit.addEventListener(`click`, validateForm);
-uploadSubmit.addEventListener(`keydown`, function (evt) {
-  window.main.isEnterEvent(evt, validateForm);
-});
+textHashtags.addEventListener(`input`, onHashtagsInput);
+textDescription.addEventListener(`input`, onDescriptionInput);
 
 
 // Отправляет данные с формы на сервер
@@ -246,21 +235,21 @@ const renderResponse = function (template, messageText, buttonText) {
   responseMessage.querySelector(`h2`).textContent = messageText;
   responseButton.textContent = buttonText;
 
-  const closeMessage = function () {
+  const onResponseButtonClick = function () {
     responseMessage.remove();
   };
 
-  responseButton.addEventListener(`click`, closeMessage);
-  document.addEventListener(`click`, closeMessage);
+  responseButton.addEventListener(`click`, onResponseButtonClick);
+  document.addEventListener(`click`, onResponseButtonClick);
   document.addEventListener(`keydown`, function (evt) {
-    window.main.isEscapeEvent(evt, closeMessage);
+    window.main.isEscapeEvent(evt, onResponseButtonClick);
   });
 
   document.querySelector(`main`).appendChild(responseMessage);
 };
 
 const successUploadForm = function () {
-  closeUpload();
+  onUploadCancelClick();
   renderResponse(
       document.querySelector(`#success`).content.querySelector(`.success`),
       `Изображение успешно загружено`, `Круто!`
@@ -268,19 +257,21 @@ const successUploadForm = function () {
 };
 
 const errorUploadForm = function (errorMessage) {
-  closeUpload();
+  onUploadCancelClick();
   renderResponse(
       document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true),
       errorMessage, `Попробовать загрузить другой файл`
   );
 };
 
-const submitHandler = function (evt) {
+const onFormSubmit = function (evt) {
   evt.preventDefault();
+  onHashtagsInput();
+  onDescriptionInput();
   window.backend.upload(new FormData(window.move.imageUploadForm), successUploadForm, errorUploadForm);
 };
 
-window.move.imageUploadForm.addEventListener(`submit`, submitHandler);
+window.move.imageUploadForm.addEventListener(`submit`, onFormSubmit);
 
 
 window.renderResponse = renderResponse;

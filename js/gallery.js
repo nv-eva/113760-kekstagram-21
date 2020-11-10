@@ -6,7 +6,7 @@ const bigPictureCancel = window.bigPicture.querySelector(`#picture-cancel`);
 const onBigPictureEscPress = function (evt) {
   if (evt.key === `Escape`) {
     evt.preventDefault();
-    hideBigPicture();
+    onBigPictureCancelClick();
   }
 };
 
@@ -16,7 +16,7 @@ const openBigPicture = function () {
   window.main.fixBody();
 };
 
-const hideBigPicture = function () {
+const onBigPictureCancelClick = function () {
   window.bigPicture.classList.add(`hidden`);
   document.removeEventListener(`keydown`, onBigPictureEscPress);
   window.main.unfixBody();
@@ -62,7 +62,7 @@ const removePhotos = function () {
 const updatePhotos = function () {
   removePhotos();
   const filtredPhotos = userPhotos.slice();
-  renderPictures(window.filters.onChangeFilters(filtredPhotos));
+  renderPictures(window.filters.onFiltersChange(filtredPhotos));
 };
 
 const filterButtons = window.filters.imageFilters.querySelectorAll(`.img-filters__button`);
@@ -102,7 +102,7 @@ const errorRender = function (errorMessage) {
 
 window.backend.load(successRender, errorRender);
 
-bigPictureCancel.addEventListener(`click`, hideBigPicture);
+bigPictureCancel.addEventListener(`click`, onBigPictureCancelClick);
 bigPictureCancel.addEventListener(`keydown`, function (evt) {
-  window.main.isEnterEvent(evt, hideBigPicture);
+  window.main.isEnterEvent(evt, onBigPictureCancelClick);
 });
