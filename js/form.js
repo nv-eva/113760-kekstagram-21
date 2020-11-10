@@ -228,6 +228,9 @@ textDescription.addEventListener(`input`, onDescriptionInput);
 
 
 // Отправляет данные с формы на сервер
+const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`).cloneNode(true);
+const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true);
+
 const renderResponse = function (template, messageText, buttonText) {
   const responseMessage = template.cloneNode(true);
   const responseButton = responseMessage.querySelector(`button`);
@@ -251,7 +254,7 @@ const renderResponse = function (template, messageText, buttonText) {
 const successUploadForm = function () {
   onUploadCancelClick();
   renderResponse(
-      document.querySelector(`#success`).content.querySelector(`.success`),
+      successTemplate,
       `Изображение успешно загружено`, `Круто!`
   );
 };
@@ -259,7 +262,7 @@ const successUploadForm = function () {
 const errorUploadForm = function (errorMessage) {
   onUploadCancelClick();
   renderResponse(
-      document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true),
+      errorTemplate,
       errorMessage, `Попробовать загрузить другой файл`
   );
 };
@@ -273,5 +276,5 @@ const onFormSubmit = function (evt) {
 
 window.move.imageUploadForm.addEventListener(`submit`, onFormSubmit);
 
-
+window.errorTemplate = errorTemplate;
 window.renderResponse = renderResponse;

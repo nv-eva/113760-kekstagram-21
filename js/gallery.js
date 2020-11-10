@@ -95,7 +95,7 @@ const successRender = function (data) {
 
 const errorRender = function (errorMessage) {
   window.renderResponse(
-      document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true),
+      window.errorTemplate,
       errorMessage, `ОК`
   );
 };
