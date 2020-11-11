@@ -6,6 +6,13 @@ const bigPicture = document.querySelector(`.big-picture`);
 const commentsList = bigPicture.querySelector(`.social__comments`);
 const loaderComments = bigPicture.querySelector(`.comments-loader`);
 
+const declineComments = (number) => {
+  let commentsForm = (number % 10 === 1 && number !== 11)
+    ? `комментария`
+    : `комментариев`;
+  return commentsForm;
+};
+
 const renderComment = (comment) => {
   const photoComment = document.createElement(`li`);
   photoComment.classList.add(`social__comment`);
@@ -27,6 +34,7 @@ const renderComment = (comment) => {
 };
 
 const updateComments = (comments, allCommentsCount) => {
+  let commentsForm = declineComments(allCommentsCount);
   let fragmentLength;
   let loadCommentsCount;
 
@@ -38,7 +46,6 @@ const updateComments = (comments, allCommentsCount) => {
     loaderComments.classList.remove(`hidden`);
   }
 
-  // Вставляет комментарии
   const photoComments = document.createDocumentFragment();
   for (let i = 0; i < fragmentLength; i++) {
     photoComments.appendChild(renderComment(comments[0]));
@@ -46,12 +53,8 @@ const updateComments = (comments, allCommentsCount) => {
   }
   commentsList.appendChild(photoComments);
 
-  // Изменяет текст счетчика
   loadCommentsCount = allCommentsCount - comments.length;
-  let elements = (allCommentsCount % 10 === 1 && allCommentsCount !== 11)
-    ? `комментария`
-    : `комментариев`;
-  bigPicture.querySelector(`.social__comment-count`).textContent = `${loadCommentsCount} из ${allCommentsCount} ${elements}`;
+  bigPicture.querySelector(`.social__comment-count`).textContent = `${loadCommentsCount} из ${allCommentsCount} ${commentsForm}`;
 };
 
 window.preview = {
