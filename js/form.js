@@ -240,13 +240,12 @@ const renderResponse = function (template, messageText, buttonText) {
 
   const onResponseButtonClick = function () {
     responseMessage.remove();
+    responseButton.removeEventListener(`click`, onResponseButtonClick);
+    document.removeEventListener(`click`, onResponseButtonClick);
   };
 
   responseButton.addEventListener(`click`, onResponseButtonClick);
   document.addEventListener(`click`, onResponseButtonClick);
-  document.addEventListener(`keydown`, function (evt) {
-    window.main.isEscapeEvent(evt, onResponseButtonClick);
-  });
 
   document.querySelector(`main`).appendChild(responseMessage);
 };
