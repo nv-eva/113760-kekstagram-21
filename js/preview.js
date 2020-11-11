@@ -54,20 +54,22 @@ const updateComments = function (comments, allCommentsCount) {
   bigPicture.querySelector(`.social__comment-count`).textContent = `${loadCommentsCount} из ${allCommentsCount} ${elements}`;
 };
 
-window.renderBigPicture = function (photo) {
-  bigPicture.querySelector(`.big-picture__img img`).src = photo.url;
-  bigPicture.querySelector(`.likes-count`).textContent = photo.likes;
-  bigPicture.querySelector(`.social__caption`).textContent = photo.description;
+window.preview = {
+  renderBigPicture(photo) {
+    bigPicture.querySelector(`.big-picture__img img`).src = photo.url;
+    bigPicture.querySelector(`.likes-count`).textContent = photo.likes;
+    bigPicture.querySelector(`.social__caption`).textContent = photo.description;
 
-  commentsList.textContent = ``;
+    commentsList.textContent = ``;
 
-  const countComments = photo.comments.length;
-  const loadComments = photo.comments.slice();
+    const countComments = photo.comments.length;
+    const loadComments = photo.comments.slice();
 
-  updateComments(loadComments, countComments);
-  loaderComments.addEventListener(`click`, function () {
     updateComments(loadComments, countComments);
-  });
+    loaderComments.addEventListener(`click`, function () {
+      updateComments(loadComments, countComments);
+    });
+  }
 };
 
-window.bigPicture = bigPicture;
+window.preview.bigPicture = bigPicture;

@@ -276,5 +276,6 @@ const onFormSubmit = function (evt) {
 
 window.move.imageUploadForm.addEventListener(`submit`, onFormSubmit);
 
-window.errorTemplate = errorTemplate;
-window.renderResponse = renderResponse;
+window.form = {};
+window.form.errorTemplate = errorTemplate;
+window.form.renderResponse = renderResponse;

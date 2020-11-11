@@ -1,7 +1,7 @@
 'use strict';
 
 const photoListElement = document.querySelector(`.pictures`);
-const bigPictureCancel = window.bigPicture.querySelector(`#picture-cancel`);
+const bigPictureCancel = window.preview.bigPicture.querySelector(`#picture-cancel`);
 
 const onBigPictureEscPress = function (evt) {
   if (evt.key === `Escape`) {
@@ -11,21 +11,21 @@ const onBigPictureEscPress = function (evt) {
 };
 
 const openBigPicture = function () {
-  window.bigPicture.classList.remove(`hidden`);
+  window.preview.bigPicture.classList.remove(`hidden`);
   document.addEventListener(`keydown`, onBigPictureEscPress);
   window.main.fixBody();
 };
 
 const onBigPictureCancelClick = function () {
-  window.bigPicture.classList.add(`hidden`);
+  window.preview.bigPicture.classList.add(`hidden`);
   document.removeEventListener(`keydown`, onBigPictureEscPress);
   window.main.unfixBody();
 
-  window.bigPicture.querySelector(`.social__footer-text`).value = ``;
+  window.preview.bigPicture.querySelector(`.social__footer-text`).value = ``;
 };
 
 const showBigPicture = function (photo) {
-  window.renderBigPicture(photo);
+  window.preview.renderBigPicture(photo);
   openBigPicture();
 };
 
@@ -36,7 +36,7 @@ const renderPictures = function (photos) {
   const fragment = document.createDocumentFragment();
 
   for (let i = 0; i < photos.length; i++) {
-    const currentPhoto = window.renderPicture(photos[i]);
+    const currentPhoto = window.picture(photos[i]);
 
     currentPhoto.addEventListener(`click`, function () {
       showBigPicture(photos[i]);
@@ -62,10 +62,10 @@ const removePhotos = function () {
 const updatePhotos = function () {
   removePhotos();
   const filtredPhotos = userPhotos.slice();
-  renderPictures(window.filters.onFiltersChange(filtredPhotos));
+  renderPictures(window.filters.onChange(filtredPhotos));
 };
 
-const filterButtons = window.filters.imageFilters.querySelectorAll(`.img-filters__button`);
+const filterButtons = window.filters.image.querySelectorAll(`.img-filters__button`);
 
 const removeActiveClass = function () {
   filterButtons.forEach((item) => {
@@ -74,7 +74,7 @@ const removeActiveClass = function () {
 };
 
 const showFilters = function () {
-  window.filters.imageFilters.classList.remove(`img-filters--inactive`);
+  window.filters.image.classList.remove(`img-filters--inactive`);
 
   filterButtons.forEach((item) => {
     item.addEventListener(`click`, window.debounce(() => {
@@ -92,8 +92,8 @@ const successRender = function (data) {
 };
 
 const errorRender = function (errorMessage) {
-  window.renderResponse(
-      window.errorTemplate,
+  window.form.renderResponse(
+      window.form.errorTemplate,
       errorMessage, `ОК`
   );
 };
