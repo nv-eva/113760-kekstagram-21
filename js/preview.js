@@ -6,7 +6,7 @@ const bigPicture = document.querySelector(`.big-picture`);
 const commentsList = bigPicture.querySelector(`.social__comments`);
 const loaderComments = bigPicture.querySelector(`.comments-loader`);
 
-const renderComment = function (comment) {
+const renderComment = (comment) => {
   const photoComment = document.createElement(`li`);
   photoComment.classList.add(`social__comment`);
 
@@ -26,7 +26,7 @@ const renderComment = function (comment) {
   return photoComment;
 };
 
-const updateComments = function (comments, allCommentsCount) {
+const updateComments = (comments, allCommentsCount) => {
   let fragmentLength;
   let loadCommentsCount;
 

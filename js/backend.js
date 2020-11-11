@@ -8,7 +8,7 @@ const StatusCode = {
   OK: 200
 };
 
-const getBackendResponse = function (onLoad, onError, method, url, data) {
+const getBackendResponse = (onLoad, onError, method, url, data) => {
   const xhr = new XMLHttpRequest();
   xhr.responseType = `json`;
 

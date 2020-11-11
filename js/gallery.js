@@ -3,20 +3,20 @@
 const photoListElement = document.querySelector(`.pictures`);
 const bigPictureCancel = window.preview.bigPicture.querySelector(`#picture-cancel`);
 
-const onBigPictureEscPress = function (evt) {
+const onBigPictureEscPress = (evt) => {
   if (evt.key === `Escape`) {
     evt.preventDefault();
     onBigPictureCancelClick();
   }
 };
 
-const openBigPicture = function () {
+const openBigPicture = () => {
   window.preview.bigPicture.classList.remove(`hidden`);
   document.addEventListener(`keydown`, onBigPictureEscPress);
   window.main.fixBody();
 };
 
-const onBigPictureCancelClick = function () {
+const onBigPictureCancelClick = () => {
   window.preview.bigPicture.classList.add(`hidden`);
   document.removeEventListener(`keydown`, onBigPictureEscPress);
   window.main.unfixBody();
@@ -24,7 +24,7 @@ const onBigPictureCancelClick = function () {
   window.preview.bigPicture.querySelector(`.social__footer-text`).value = ``;
 };
 
-const showBigPicture = function (photo) {
+const showBigPicture = (photo) => {
   window.preview.renderBigPicture(photo);
   openBigPicture();
 };
@@ -32,7 +32,7 @@ const showBigPicture = function (photo) {
 // Отрисовывает фотографии на странице
 let userPhotos = [];
 
-const renderPictures = function (photos) {
+const renderPictures = (photos) => {
   const fragment = document.createDocumentFragment();
 
   for (let i = 0; i < photos.length; i++) {
@@ -53,13 +53,13 @@ const renderPictures = function (photos) {
   photoListElement.appendChild(fragment);
 };
 
-const removePhotos = function () {
+const removePhotos = () => {
   document.querySelectorAll(`.picture`).forEach((item) => {
     item.remove();
   });
 };
 
-const updatePhotos = function () {
+const updatePhotos = () => {
   removePhotos();
   const filtredPhotos = userPhotos.slice();
   renderPictures(window.filters.onChange(filtredPhotos));
@@ -67,13 +67,13 @@ const updatePhotos = function () {
 
 const filterButtons = window.filters.image.querySelectorAll(`.img-filters__button`);
 
-const removeActiveClass = function () {
+const removeActiveClass = () => {
   filterButtons.forEach((item) => {
     item.classList.remove(`img-filters__button--active`);
   });
 };
 
-const showFilters = function () {
+const showFilters = () => {
   window.filters.image.classList.remove(`img-filters--inactive`);
 
   filterButtons.forEach((item) => {
@@ -85,13 +85,13 @@ const showFilters = function () {
   });
 };
 
-const successRender = function (data) {
+const successRender = (data) => {
   userPhotos = data;
   renderPictures(userPhotos);
   showFilters();
 };
 
-const errorRender = function (errorMessage) {
+const errorRender = (errorMessage) => {
   window.form.renderResponse(
       window.form.errorTemplate,
       errorMessage, `ОК`

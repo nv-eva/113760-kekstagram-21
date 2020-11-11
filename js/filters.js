@@ -6,7 +6,7 @@ const imageFilters = document.querySelector(`.img-filters`);
 const filterRandom = imageFilters.querySelector(`#filter-random`);
 const filterDiscussed = imageFilters.querySelector(`#filter-discussed`);
 
-const shuffle = function (elements) {
+const shuffle = (elements) => {
   let j;
   let element;
 

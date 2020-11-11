@@ -13,7 +13,7 @@ const imageUploadOverlay = imageUpload.querySelector(`.img-upload__overlay`);
 const uploadOpenFile = imageUpload.querySelector(`#upload-file`);
 const uploadCancel = imageUpload.querySelector(`#upload-cancel`);
 
-const onPopupEscPress = function (evt) {
+const onPopupEscPress = (evt) => {
   if (evt.key === `Escape`
     && document.activeElement !== textDescription
     && document.activeElement !== textHashtags) {
@@ -22,7 +22,7 @@ const onPopupEscPress = function (evt) {
   }
 };
 
-const onFileLoad = function () {
+const onFileLoad = () => {
   imageUploadOverlay.classList.remove(`hidden`);
   document.addEventListener(`keydown`, onPopupEscPress);
   window.main.fixBody();
@@ -39,7 +39,7 @@ const onFileLoad = function () {
   uploadEffectLevel.classList.add(`hidden`);
 };
 
-const onUploadCancelClick = function () {
+const onUploadCancelClick = () => {
   imageUploadOverlay.classList.add(`hidden`);
   document.removeEventListener(`keydown`, onPopupEscPress);
   window.main.unfixBody();
@@ -66,15 +66,15 @@ const imageUploadPreview = imageUpload.querySelector(`.img-upload__preview img`)
 let scaleStep = SCALE_STEP * 0.01;
 let scaleValue = 1;
 
-const renderScaleControlValue = function () {
+const renderScaleControlValue = () => {
   scaleControlValue.value = (scaleValue) * 100 + `%`;
 };
 
-const renderImageScale = function () {
+const renderImageScale = () => {
   imageUploadPreview.style.transform = `scale(${scaleValue})`;
 };
 
-const checkScaleControls = function () {
+const checkScaleControls = () => {
   if (scaleValue <= MIN_SCALE * 0.01) {
     scaleControlSmaller.disabled = true;
     scaleControlSmaller.classList.add(`scale__control--disabled`);
@@ -92,7 +92,7 @@ const checkScaleControls = function () {
   }
 };
 
-const onScaleControlSmallerClick = function () {
+const onScaleControlSmallerClick = () => {
   if (scaleValue - scaleStep >= MIN_SCALE * 0.01) {
     scaleValue -= scaleStep;
     renderScaleControlValue();
@@ -101,7 +101,7 @@ const onScaleControlSmallerClick = function () {
   }
 };
 
-const onScaleControlBiggerClick = function () {
+const onScaleControlBiggerClick = () => {
   if (scaleValue + scaleStep <= MAX_SCALE * 0.01) {
     scaleValue += scaleStep;
     renderScaleControlValue();
@@ -126,14 +126,14 @@ const uploadEffectLevel = window.move.imageUploadForm.querySelector(`.img-upload
 
 let effectValue = START_EFFECT_VALUE;
 
-const renderStartEffectLevel = function () {
+const renderStartEffectLevel = () => {
   effectValue = START_EFFECT_VALUE;
   window.move.effectLevelValue.value = effectValue;
   window.move.effectLevelDepth.style.width = effectValue + `%`;
   window.move.effectLevelPin.style.left = effectValue + `%`;
 };
 
-const removeAllImageEffects = function () {
+const removeAllImageEffects = () => {
   const effects = window.move.imageUploadForm.querySelectorAll(`input[type="radio"]`);
   effects.forEach((item, i) => {
     imageUploadPreview.classList.remove(`effects__preview--${effects[i].value}`);
@@ -141,7 +141,7 @@ const removeAllImageEffects = function () {
   imageUploadPreview.style.filter = ``;
 };
 
-const effectsChangeHandler = function (evt) {
+const effectsChangeHandler = (evt) => {
   if (evt.target.matches(`input[type="radio"]`)) {
     renderStartEffectLevel();
     removeAllImageEffects();
@@ -155,7 +155,7 @@ const effectsChangeHandler = function (evt) {
   }
 };
 
-const changeEffectValue = function () {
+const changeEffectValue = () => {
   effectValue = window.move.effectLevelValue.value;
 
   if (imageUploadPreview.classList.contains(`effects__preview--chrome`)) {
@@ -190,7 +190,7 @@ window.move.effectLevelPin.addEventListener(`keydown`, function (evt) {
 const textHashtags = window.move.imageUploadForm.querySelector(`.text__hashtags`);
 const textDescription = window.move.imageUploadForm.querySelector(`.text__description`);
 
-const onHashtagsInput = function () {
+const onHashtagsInput = () => {
   const hashtags = textHashtags.value.toLowerCase().split(` `);
   const regularHashtag = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
 
@@ -211,7 +211,7 @@ const onHashtagsInput = function () {
   textHashtags.reportValidity();
 };
 
-const onDescriptionInput = function () {
+const onDescriptionInput = () => {
   const descriptionLength = textDescription.value.length;
 
   if (descriptionLength > MAX_DESCRIPTION_LENGTH) {
@@ -231,14 +231,14 @@ textDescription.addEventListener(`input`, onDescriptionInput);
 const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`).cloneNode(true);
 const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true);
 
-const renderResponse = function (template, messageText, buttonText) {
+const renderResponse = (template, messageText, buttonText) => {
   const responseMessage = template.cloneNode(true);
   const responseButton = responseMessage.querySelector(`button`);
 
   responseMessage.querySelector(`h2`).textContent = messageText;
   responseButton.textContent = buttonText;
 
-  const onResponseButtonClick = function () {
+  const onResponseButtonClick = () => {
     responseMessage.remove();
     responseButton.removeEventListener(`click`, onResponseButtonClick);
     document.removeEventListener(`click`, onResponseButtonClick);
@@ -258,7 +258,7 @@ const successUploadForm = function () {
   );
 };
 
-const errorUploadForm = function (errorMessage) {
+const errorUploadForm = (errorMessage) => {
   onUploadCancelClick();
   renderResponse(
       errorTemplate,
@@ -266,7 +266,7 @@ const errorUploadForm = function (errorMessage) {
   );
 };
 
-const onFormSubmit = function (evt) {
+const onFormSubmit = (evt) => {
   evt.preventDefault();
   onHashtagsInput();
   onDescriptionInput();
