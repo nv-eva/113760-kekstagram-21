@@ -77,13 +77,11 @@ const showFilters = function () {
   window.filters.imageFilters.classList.remove(`img-filters--inactive`);
 
   filterButtons.forEach((item) => {
-    item.addEventListener(`click`, function () {
+    item.addEventListener(`click`, window.debounce(() => {
       removeActiveClass();
       item.classList.add(`img-filters__button--active`);
-      window.debounce(function () {
-        updatePhotos();
-      })();
-    });
+      updatePhotos();
+    }));
   });
 };
 
