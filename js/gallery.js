@@ -2,6 +2,9 @@
 
 const photoListElement = document.querySelector(`.pictures`);
 const bigPictureCancel = window.preview.bigPicture.querySelector(`#picture-cancel`);
+const filterButtons = window.filters.image.querySelectorAll(`.img-filters__button`);
+
+let userPhotos = [];
 
 const onBigPictureEscPress = (evt) => {
   if (evt.key === `Escape`) {
@@ -16,6 +19,11 @@ const openBigPicture = () => {
   window.main.fixBody();
 };
 
+const showBigPicture = (photo) => {
+  window.preview.renderBigPicture(photo);
+  openBigPicture();
+};
+
 const onBigPictureCancelClick = () => {
   window.preview.bigPicture.classList.add(`hidden`);
   document.removeEventListener(`keydown`, onBigPictureEscPress);
@@ -23,14 +31,6 @@ const onBigPictureCancelClick = () => {
 
   window.preview.bigPicture.querySelector(`.social__footer-text`).value = ``;
 };
-
-const showBigPicture = (photo) => {
-  window.preview.renderBigPicture(photo);
-  openBigPicture();
-};
-
-// Отрисовывает фотографии на странице
-let userPhotos = [];
 
 const renderPictures = (photos) => {
   const fragment = document.createDocumentFragment();
@@ -65,8 +65,6 @@ const updatePhotos = () => {
   renderPictures(window.filters.onChange(filtredPhotos));
 };
 
-const filterButtons = window.filters.image.querySelectorAll(`.img-filters__button`);
-
 const removeActiveClass = () => {
   filterButtons.forEach((item) => {
     item.classList.remove(`img-filters__button--active`);
@@ -98,9 +96,9 @@ const errorRender = (errorMessage) => {
   );
 };
 
-window.backend.load(successRender, errorRender);
-
 bigPictureCancel.addEventListener(`click`, onBigPictureCancelClick);
 bigPictureCancel.addEventListener(`keydown`, function (evt) {
   window.main.isEnterEvent(evt, onBigPictureCancelClick);
 });
+
+window.backend.load(successRender, errorRender);
