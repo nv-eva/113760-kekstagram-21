@@ -13,6 +13,9 @@ const maxScale = MAX_SCALE * PERCENT;
 const scaleStep = SCALE_STEP * PERCENT;
 const startEffectValue = START_EFFECT_VALUE * PERCENT;
 
+let scaleValue = startEffectValue;
+let effectValue = START_EFFECT_VALUE;
+
 const imageUpload = document.querySelector(`.img-upload`);
 const imageUploadOverlay = imageUpload.querySelector(`.img-upload__overlay`);
 const uploadOpenFile = imageUpload.querySelector(`#upload-file`);
@@ -30,9 +33,6 @@ const textDescription = window.move.imageUploadForm.querySelector(`.text__descri
 
 const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`).cloneNode(true);
 const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true);
-
-let scaleValue = startEffectValue;
-let effectValue = START_EFFECT_VALUE;
 
 
 // Изменяет масштаб изображения
