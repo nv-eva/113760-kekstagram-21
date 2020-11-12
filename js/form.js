@@ -99,7 +99,7 @@ const removeAllImageEffects = () => {
   imageUploadPreview.style.filter = ``;
 };
 
-const effectsChangeHandler = (evt) => {
+const onEffectsChange = (evt) => {
   if (evt.target.matches(`input[type="radio"]`)) {
     renderStartEffectLevel();
     removeAllImageEffects();
@@ -116,17 +116,31 @@ const effectsChangeHandler = (evt) => {
 const changeEffectValue = () => {
   effectValue = window.move.effectLevelValue.value;
 
+  let filter = ``;
+  let unit = ``;
+  let min = 0;
+  let max = 1;
+
   if (imageUploadPreview.classList.contains(`effects__preview--chrome`)) {
-    imageUploadPreview.style.filter = `grayscale(${effectValue * 0.01})`;
+    filter = `grayscale`;
   } else if (imageUploadPreview.classList.contains(`effects__preview--sepia`)) {
-    imageUploadPreview.style.filter = `sepia(${effectValue * 0.01})`;
+    filter = `sepia`;
   } else if (imageUploadPreview.classList.contains(`effects__preview--marvin`)) {
-    imageUploadPreview.style.filter = `invert(${effectValue}%)`;
+    filter = `invert`;
+    max = 100;
+    unit = `%`;
   } else if (imageUploadPreview.classList.contains(`effects__preview--phobos`)) {
-    imageUploadPreview.style.filter = `blur(${effectValue * 0.03}px)`;
+    filter = `blur`;
+    max = 3;
+    unit = `px`;
   } else if (imageUploadPreview.classList.contains(`effects__preview--heat`)) {
-    imageUploadPreview.style.filter = `brightness(${(0.3333 + effectValue / 133.33) * 3})`;
+    filter = `brightness`;
+    min = 1;
+    max = 3;
   }
+
+  const value = effectValue * (max - min) / 100 + min;
+  imageUploadPreview.style.filter = `${filter}(${value}${unit})`;
 };
 
 
@@ -253,7 +267,7 @@ scaleControlValue.addEventListener(`keydown`, function (evt) {
   window.main.isRightEvent(evt, onScaleControlBiggerClick);
 });
 
-window.move.imageUploadForm.addEventListener(`change`, effectsChangeHandler);
+window.move.imageUploadForm.addEventListener(`change`, onEffectsChange);
 
 window.move.effectLevelPin.addEventListener(`mousedown`, function (evt) {
   window.move.onMouseDown(evt, changeEffectValue);
