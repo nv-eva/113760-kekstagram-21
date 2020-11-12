@@ -6,8 +6,8 @@ const bigPicture = document.querySelector(`.big-picture`);
 const commentsList = bigPicture.querySelector(`.social__comments`);
 const loaderComments = bigPicture.querySelector(`.comments-loader`);
 
-const declineComments = (number) => {
-  let commentsForm = (number % 10 === 1 && number !== 11)
+const declineComments = (elementsCount) => {
+  let commentsForm = (elementsCount % 10 === 1 && elementsCount !== 11)
     ? `комментария`
     : `комментариев`;
   return commentsForm;
