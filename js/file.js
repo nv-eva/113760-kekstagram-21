@@ -20,8 +20,8 @@ fileChooser.addEventListener(`change`, function () {
     reader.addEventListener(`load`, function () {
       preview.src = reader.result;
 
-      for (let i = 0; i < effectsPreviews.length; i++) {
-        effectsPreviews[i].style.backgroundImage = `url(${reader.result})`;
+      for (const effectsPreview of effectsPreviews) {
+        effectsPreview.style.backgroundImage = `url(${reader.result})`;
       }
     });
 

@@ -1,42 +1,42 @@
 'use strict';
 
 const photoListElement = document.querySelector(`.pictures`);
-const bigPictureCancel = window.bigPicture.querySelector(`#picture-cancel`);
+const bigPictureCancel = window.preview.bigPicture.querySelector(`#picture-cancel`);
+const filterButtons = window.filters.image.querySelectorAll(`.img-filters__button`);
 
-const onBigPictureEscPress = function (evt) {
+let userPhotos = [];
+
+const onBigPictureEscPress = (evt) => {
   if (evt.key === `Escape`) {
     evt.preventDefault();
-    hideBigPicture();
+    onBigPictureCancelClick();
   }
 };
 
-const openBigPicture = function () {
-  window.bigPicture.classList.remove(`hidden`);
+const openBigPicture = () => {
+  window.preview.bigPicture.classList.remove(`hidden`);
   document.addEventListener(`keydown`, onBigPictureEscPress);
   window.main.fixBody();
 };
 
-const hideBigPicture = function () {
-  window.bigPicture.classList.add(`hidden`);
-  document.removeEventListener(`keydown`, onBigPictureEscPress);
-  window.main.unfixBody();
-
-  window.bigPicture.querySelector(`.social__footer-text`).value = ``;
-};
-
-const showBigPicture = function (photo) {
-  window.renderBigPicture(photo);
+const showBigPicture = (photo) => {
+  window.preview.renderBigPicture(photo);
   openBigPicture();
 };
 
-// Отрисовывает фотографии на странице
-let userPhotos = [];
+const onBigPictureCancelClick = () => {
+  window.preview.bigPicture.classList.add(`hidden`);
+  document.removeEventListener(`keydown`, onBigPictureEscPress);
+  window.main.unfixBody();
 
-const renderPictures = function (photos) {
+  window.preview.bigPicture.querySelector(`.social__footer-text`).value = ``;
+};
+
+const renderPictures = (photos) => {
   const fragment = document.createDocumentFragment();
 
   for (let i = 0; i < photos.length; i++) {
-    const currentPhoto = window.renderPicture(photos[i]);
+    const currentPhoto = window.picture(photos[i]);
 
     currentPhoto.addEventListener(`click`, function () {
       showBigPicture(photos[i]);
@@ -53,56 +53,52 @@ const renderPictures = function (photos) {
   photoListElement.appendChild(fragment);
 };
 
-const removePhotos = function () {
+const removePhotos = () => {
   document.querySelectorAll(`.picture`).forEach((item) => {
     item.remove();
   });
 };
 
-const updatePhotos = function () {
+const updatePhotos = () => {
   removePhotos();
   const filtredPhotos = userPhotos.slice();
-  renderPictures(window.filters.onChangeFilters(filtredPhotos));
+  renderPictures(window.filters.onChange(filtredPhotos));
 };
 
-const filterButtons = window.filters.imageFilters.querySelectorAll(`.img-filters__button`);
-
-const removeActiveClass = function () {
+const removeActiveClass = () => {
   filterButtons.forEach((item) => {
     item.classList.remove(`img-filters__button--active`);
   });
 };
 
-const showFilters = function () {
-  window.filters.imageFilters.classList.remove(`img-filters--inactive`);
+const showFilters = () => {
+  window.filters.image.classList.remove(`img-filters--inactive`);
 
   filterButtons.forEach((item) => {
-    item.addEventListener(`click`, function () {
+    item.addEventListener(`click`, window.debounce(() => {
       removeActiveClass();
       item.classList.add(`img-filters__button--active`);
-      window.debounce(function () {
-        updatePhotos();
-      })();
-    });
+      updatePhotos();
+    }));
   });
 };
 
-const successRender = function (data) {
+const successRender = (data) => {
   userPhotos = data;
   renderPictures(userPhotos);
   showFilters();
 };
 
-const errorRender = function (errorMessage) {
-  window.renderResponse(
-      document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true),
+const errorRender = (errorMessage) => {
+  window.form.renderResponse(
+      window.form.errorTemplate,
       errorMessage, `ОК`
   );
 };
 
-window.backend.load(successRender, errorRender);
-
-bigPictureCancel.addEventListener(`click`, hideBigPicture);
+bigPictureCancel.addEventListener(`click`, onBigPictureCancelClick);
 bigPictureCancel.addEventListener(`keydown`, function (evt) {
-  window.main.isEnterEvent(evt, hideBigPicture);
+  window.main.isEnterEvent(evt, onBigPictureCancelClick);
 });
+
+window.backend.load(successRender, errorRender);

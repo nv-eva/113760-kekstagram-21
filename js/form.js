@@ -1,77 +1,51 @@
 'use strict';
 
-// Показывает и скрывает окно загрузки фото
+const PERCENT = 0.01;
+const MIN_SCALE = 25;
+const MAX_SCALE = 100;
+const SCALE_STEP = 25;
+const START_EFFECT_VALUE = 100;
+const MAX_HASHTAGS_COUNT = 5;
+const MAX_DESCRIPTION_LENGTH = 140;
+
+const minScale = MIN_SCALE * PERCENT;
+const maxScale = MAX_SCALE * PERCENT;
+const scaleStep = SCALE_STEP * PERCENT;
+const startEffectValue = START_EFFECT_VALUE * PERCENT;
+
+let scaleValue = startEffectValue;
+let effectValue = START_EFFECT_VALUE;
+
 const imageUpload = document.querySelector(`.img-upload`);
 const imageUploadOverlay = imageUpload.querySelector(`.img-upload__overlay`);
 const uploadOpenFile = imageUpload.querySelector(`#upload-file`);
 const uploadCancel = imageUpload.querySelector(`#upload-cancel`);
 
-const onPopupEscPress = function (evt) {
-  if (evt.key === `Escape`
-    && document.activeElement !== textDescription
-    && document.activeElement !== textHashtags) {
-    evt.preventDefault();
-    closeUpload();
-  }
-};
-
-const openUpload = function () {
-  imageUploadOverlay.classList.remove(`hidden`);
-  document.addEventListener(`keydown`, onPopupEscPress);
-  window.main.fixBody();
-  // Возвращает размер изображения к 100%
-  scaleValue = 1;
-  renderScaleControlValue();
-  renderImageScale();
-  checkScaleControls();
-  // Сбрасывает с превью изображения все эффекты
-  renderStartEffectLevel();
-  removeAllImageEffects();
-  imageUpload.querySelector(`[name=effect]`).checked = `none`;
-  imageUploadPreview.classList.add(`effects__preview--none`);
-  uploadEffectLevel.classList.add(`hidden`);
-};
-
-const closeUpload = function () {
-  imageUploadOverlay.classList.add(`hidden`);
-  document.removeEventListener(`keydown`, onPopupEscPress);
-  window.main.unfixBody();
-  // Сбрасывает значения в форме
-  uploadOpenFile.value = ``;
-  textDescription.value = ``;
-  textHashtags.value = ``;
-};
-
-uploadOpenFile.addEventListener(`change`, openUpload);
-
-uploadCancel.addEventListener(`click`, closeUpload);
-uploadCancel.addEventListener(`keydown`, function (evt) {
-  window.main.isEnterEvent(evt, closeUpload);
-});
-
-
-// Редактирует размер изображения
 const scaleControlSmaller = imageUpload.querySelector(`.scale__control--smaller`);
 const scaleControlBigger = imageUpload.querySelector(`.scale__control--bigger`);
 const scaleControlValue = imageUpload.querySelector(`.scale__control--value`);
 const imageUploadPreview = imageUpload.querySelector(`.img-upload__preview img`);
 
-const MIN_SCALE = 25;
-const MAX_SCALE = 100;
-const SCALE_STEP = 25;
-let scaleStep = SCALE_STEP * 0.01;
-let scaleValue = 1;
+const uploadEffectLevel = window.move.imageUploadForm.querySelector(`.img-upload__effect-level`);
 
-const renderScaleControlValue = function () {
+const textHashtags = window.move.imageUploadForm.querySelector(`.text__hashtags`);
+const textDescription = window.move.imageUploadForm.querySelector(`.text__description`);
+
+const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`).cloneNode(true);
+const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true);
+
+
+// Изменяет масштаб изображения
+const renderScaleControlValue = () => {
   scaleControlValue.value = (scaleValue) * 100 + `%`;
 };
 
-const renderImageScale = function () {
+const renderImageScale = () => {
   imageUploadPreview.style.transform = `scale(${scaleValue})`;
 };
 
-const checkScaleControls = function () {
-  if (scaleValue <= MIN_SCALE * 0.01) {
+const checkScaleControls = () => {
+  if (scaleValue <= minScale) {
     scaleControlSmaller.disabled = true;
     scaleControlSmaller.classList.add(`scale__control--disabled`);
   } else {
@@ -79,7 +53,7 @@ const checkScaleControls = function () {
     scaleControlSmaller.classList.remove(`scale__control--disabled`);
   }
 
-  if (scaleValue >= MAX_SCALE * 0.01) {
+  if (scaleValue >= maxScale) {
     scaleControlBigger.disabled = true;
     scaleControlBigger.classList.add(`scale__control--disabled`);
   } else {
@@ -88,49 +62,36 @@ const checkScaleControls = function () {
   }
 };
 
-const makeScaleSmaller = function () {
-  if (scaleValue - scaleStep >= MIN_SCALE * 0.01) {
+const changeScale = () => {
+  renderScaleControlValue();
+  renderImageScale();
+  checkScaleControls();
+};
+
+const onScaleControlSmallerClick = () => {
+  if (scaleValue - scaleStep >= minScale) {
     scaleValue -= scaleStep;
-    renderScaleControlValue();
-    renderImageScale();
-    checkScaleControls();
+    changeScale();
   }
 };
 
-const makeScaleBigger = function () {
-  if (scaleValue + scaleStep <= MAX_SCALE * 0.01) {
+const onScaleControlBiggerClick = () => {
+  if (scaleValue + scaleStep <= maxScale) {
     scaleValue += scaleStep;
-    renderScaleControlValue();
-    renderImageScale();
-    checkScaleControls();
+    changeScale();
   }
 };
-
-scaleControlSmaller.addEventListener(`click`, makeScaleSmaller);
-scaleControlValue.addEventListener(`keydown`, function (evt) {
-  window.main.isLeftEvent(evt, makeScaleSmaller);
-});
-
-scaleControlBigger.addEventListener(`click`, makeScaleBigger);
-scaleControlValue.addEventListener(`keydown`, function (evt) {
-  window.main.isRightEvent(evt, makeScaleBigger);
-});
 
 
 // Применяет эффекты к изображению
-const uploadEffectLevel = window.move.imageUploadForm.querySelector(`.img-upload__effect-level`);
-
-const START_EFFECT_VALUE = 100;
-let effectValue = START_EFFECT_VALUE;
-
-const renderStartEffectLevel = function () {
+const renderStartEffectLevel = () => {
   effectValue = START_EFFECT_VALUE;
   window.move.effectLevelValue.value = effectValue;
   window.move.effectLevelDepth.style.width = effectValue + `%`;
   window.move.effectLevelPin.style.left = effectValue + `%`;
 };
 
-const removeAllImageEffects = function () {
+const removeAllImageEffects = () => {
   const effects = window.move.imageUploadForm.querySelectorAll(`input[type="radio"]`);
   effects.forEach((item, i) => {
     imageUploadPreview.classList.remove(`effects__preview--${effects[i].value}`);
@@ -138,7 +99,7 @@ const removeAllImageEffects = function () {
   imageUploadPreview.style.filter = ``;
 };
 
-const effectsChangeHandler = function (evt) {
+const onEffectsChange = (evt) => {
   if (evt.target.matches(`input[type="radio"]`)) {
     renderStartEffectLevel();
     removeAllImageEffects();
@@ -152,45 +113,39 @@ const effectsChangeHandler = function (evt) {
   }
 };
 
-const changeEffectValue = function () {
+const changeEffectValue = () => {
   effectValue = window.move.effectLevelValue.value;
 
+  let filter = ``;
+  let unit = ``;
+  let min = 0;
+  let max = 1;
+
   if (imageUploadPreview.classList.contains(`effects__preview--chrome`)) {
-    imageUploadPreview.style.filter = `grayscale(${effectValue * 0.01})`;
+    filter = `grayscale`;
   } else if (imageUploadPreview.classList.contains(`effects__preview--sepia`)) {
-    imageUploadPreview.style.filter = `sepia(${effectValue * 0.01})`;
+    filter = `sepia`;
   } else if (imageUploadPreview.classList.contains(`effects__preview--marvin`)) {
-    imageUploadPreview.style.filter = `invert(${effectValue}%)`;
+    filter = `invert`;
+    max = 100;
+    unit = `%`;
   } else if (imageUploadPreview.classList.contains(`effects__preview--phobos`)) {
-    imageUploadPreview.style.filter = `blur(${effectValue * 0.03}px)`;
+    filter = `blur`;
+    max = 3;
+    unit = `px`;
   } else if (imageUploadPreview.classList.contains(`effects__preview--heat`)) {
-    imageUploadPreview.style.filter = `brightness(${(0.3333 + effectValue / 133.33) * 3})`;
+    filter = `brightness`;
+    min = 1;
+    max = 3;
   }
+
+  const value = effectValue * (max - min) / 100 + min;
+  imageUploadPreview.style.filter = `${filter}(${value}${unit})`;
 };
-
-window.move.imageUploadForm.addEventListener(`change`, effectsChangeHandler);
-
-window.move.effectLevelPin.addEventListener(`mousedown`, function (evt) {
-  window.move.onMouseDown(evt, changeEffectValue);
-});
-
-window.move.effectLevelPin.addEventListener(`keydown`, function (evt) {
-  window.move.onArrowLeft(evt, changeEffectValue);
-});
-
-window.move.effectLevelPin.addEventListener(`keydown`, function (evt) {
-  window.move.onArrowRight(evt, changeEffectValue);
-});
 
 
 // Валидирует хэштеги и комментарии
-const textHashtags = window.move.imageUploadForm.querySelector(`.text__hashtags`);
-const textDescription = window.move.imageUploadForm.querySelector(`.text__description`);
-const uploadSubmit = window.move.imageUploadForm.querySelector(`#upload-submit`);
-const MAX_HASHTAGS_COUNT = 5;
-const MAX_DESCRIPTION_LENGTH = 140;
-
-const validateHashtags = function () {
+const onHashtagsInput = () => {
   const hashtags = textHashtags.value.toLowerCase().split(` `);
   const regularHashtag = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
 
@@ -211,7 +166,7 @@ const validateHashtags = function () {
   textHashtags.reportValidity();
 };
 
-const validateDescription = function () {
+const onDescriptionInput = () => {
   const descriptionLength = textDescription.value.length;
 
   if (descriptionLength > MAX_DESCRIPTION_LENGTH) {
@@ -223,63 +178,119 @@ const validateDescription = function () {
   textDescription.reportValidity();
 };
 
-const validateForm = function () {
-  validateHashtags();
-  validateDescription();
+const clearForm = () => {
+  uploadOpenFile.value = ``;
+  textDescription.value = ``;
+  textHashtags.value = ``;
 };
 
-textHashtags.addEventListener(`input`, validateHashtags);
-textDescription.addEventListener(`input`, validateDescription);
 
-uploadSubmit.addEventListener(`click`, validateForm);
-uploadSubmit.addEventListener(`keydown`, function (evt) {
-  window.main.isEnterEvent(evt, validateForm);
-});
+// Открывает и закрывает форму редактирования
+const onPopupEscPress = (evt) => {
+  if (evt.key === `Escape`
+    && document.activeElement !== textDescription
+    && document.activeElement !== textHashtags) {
+    evt.preventDefault();
+    onUploadCancelClick();
+  }
+};
+
+const onFileLoad = () => {
+  imageUploadOverlay.classList.remove(`hidden`);
+  document.addEventListener(`keydown`, onPopupEscPress);
+  window.main.fixBody();
+
+  scaleValue = startEffectValue;
+  changeScale();
+
+  renderStartEffectLevel();
+  removeAllImageEffects();
+  imageUpload.querySelector(`[name=effect]`).checked = `none`;
+  imageUploadPreview.classList.add(`effects__preview--none`);
+  uploadEffectLevel.classList.add(`hidden`);
+};
+
+const onUploadCancelClick = () => {
+  imageUploadOverlay.classList.add(`hidden`);
+  document.removeEventListener(`keydown`, onPopupEscPress);
+  window.main.unfixBody();
+  clearForm();
+};
 
 
 // Отправляет данные с формы на сервер
-const renderResponse = function (template, messageText, buttonText) {
+const renderResponse = (template, messageText, buttonText) => {
   const responseMessage = template.cloneNode(true);
   const responseButton = responseMessage.querySelector(`button`);
+
+  const onResponseButtonClick = () => {
+    responseButton.removeEventListener(`click`, onResponseButtonClick);
+    document.removeEventListener(`click`, onResponseButtonClick);
+    responseMessage.remove();
+  };
 
   responseMessage.querySelector(`h2`).textContent = messageText;
   responseButton.textContent = buttonText;
 
-  const closeMessage = function () {
-    responseMessage.remove();
-  };
-
-  responseButton.addEventListener(`click`, closeMessage);
-  document.addEventListener(`click`, closeMessage);
-  document.addEventListener(`keydown`, function (evt) {
-    window.main.isEscapeEvent(evt, closeMessage);
-  });
+  responseButton.addEventListener(`click`, onResponseButtonClick);
+  document.addEventListener(`click`, onResponseButtonClick);
 
   document.querySelector(`main`).appendChild(responseMessage);
 };
 
 const successUploadForm = function () {
-  closeUpload();
-  renderResponse(
-      document.querySelector(`#success`).content.querySelector(`.success`),
-      `Изображение успешно загружено`, `Круто!`
+  onUploadCancelClick();
+  renderResponse(successTemplate, `Изображение успешно загружено`, `Круто!`);
+};
+
+const errorUploadForm = (errorMessage) => {
+  onUploadCancelClick();
+  renderResponse(errorTemplate, errorMessage, `Попробовать загрузить другой файл`
   );
 };
 
-const errorUploadForm = function (errorMessage) {
-  closeUpload();
-  renderResponse(
-      document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true),
-      errorMessage, `Попробовать загрузить другой файл`
-  );
-};
-
-const submitHandler = function (evt) {
+const onFormSubmit = (evt) => {
   evt.preventDefault();
+  onHashtagsInput();
+  onDescriptionInput();
   window.backend.upload(new FormData(window.move.imageUploadForm), successUploadForm, errorUploadForm);
 };
 
-window.move.imageUploadForm.addEventListener(`submit`, submitHandler);
 
+scaleControlSmaller.addEventListener(`click`, onScaleControlSmallerClick);
+scaleControlValue.addEventListener(`keydown`, function (evt) {
+  window.main.isLeftEvent(evt, onScaleControlSmallerClick);
+});
 
-window.renderResponse = renderResponse;
+scaleControlBigger.addEventListener(`click`, onScaleControlBiggerClick);
+scaleControlValue.addEventListener(`keydown`, function (evt) {
+  window.main.isRightEvent(evt, onScaleControlBiggerClick);
+});
+
+window.move.imageUploadForm.addEventListener(`change`, onEffectsChange);
+
+window.move.effectLevelPin.addEventListener(`mousedown`, function (evt) {
+  window.move.onMouseDown(evt, changeEffectValue);
+});
+window.move.effectLevelPin.addEventListener(`keydown`, function (evt) {
+  window.move.onArrowLeft(evt, changeEffectValue);
+});
+window.move.effectLevelPin.addEventListener(`keydown`, function (evt) {
+  window.move.onArrowRight(evt, changeEffectValue);
+});
+
+textHashtags.addEventListener(`input`, onHashtagsInput);
+textDescription.addEventListener(`input`, onDescriptionInput);
+
+uploadOpenFile.addEventListener(`change`, onFileLoad);
+
+uploadCancel.addEventListener(`click`, onUploadCancelClick);
+uploadCancel.addEventListener(`keydown`, function (evt) {
+  window.main.isEnterEvent(evt, onUploadCancelClick);
+});
+
+window.move.imageUploadForm.addEventListener(`submit`, onFormSubmit);
+
+window.form = {};
+window.form.errorTemplate = errorTemplate;
+window.form.renderResponse = renderResponse;

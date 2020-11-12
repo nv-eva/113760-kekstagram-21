@@ -1,12 +1,12 @@
 'use strict';
 
+const COUNT_PHOTOS = 10;
+
 const imageFilters = document.querySelector(`.img-filters`);
 const filterRandom = imageFilters.querySelector(`#filter-random`);
 const filterDiscussed = imageFilters.querySelector(`#filter-discussed`);
 
-const COUNT_PHOTOS = 10;
-
-const shuffle = function (elements) {
+const shuffle = (elements) => {
   let j;
   let element;
 
@@ -20,7 +20,7 @@ const shuffle = function (elements) {
 };
 
 window.filters = {
-  onChangeFilters(photos) {
+  onChange(photos) {
     if (filterRandom.classList.contains(`img-filters__button--active`)) {
       photos = shuffle(photos);
       photos.length = photos.length < COUNT_PHOTOS ? photos.length : COUNT_PHOTOS;
@@ -33,4 +33,4 @@ window.filters = {
   }
 };
 
-window.filters.imageFilters = imageFilters;
+window.filters.image = imageFilters;
