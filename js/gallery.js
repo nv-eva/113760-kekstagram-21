@@ -2,6 +2,7 @@
 
 const photoListElement = document.querySelector(`.pictures`);
 const bigPictureCancel = window.preview.bigPicture.querySelector(`#picture-cancel`);
+const filtersForm = window.filters.image.querySelector(`.img-filters__form`);
 const filterButtons = window.filters.image.querySelectorAll(`.img-filters__button`);
 
 let userPhotos = [];
@@ -74,12 +75,15 @@ const removeActiveClass = () => {
 const showFilters = () => {
   window.filters.image.classList.remove(`img-filters--inactive`);
 
+  filtersForm.addEventListener(`click`, window.debounce(() => {
+    updatePhotos();
+  }));
+
   filterButtons.forEach((item) => {
-    item.addEventListener(`click`, window.debounce(() => {
+    item.addEventListener(`click`, () => {
       removeActiveClass();
       item.classList.add(`img-filters__button--active`);
-      updatePhotos();
-    }));
+    });
   });
 };
 
