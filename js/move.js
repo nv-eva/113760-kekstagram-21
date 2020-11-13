@@ -67,8 +67,8 @@ window.move = {
     }
   },
 
-  uploadForm: imageUploadForm,
-  effectPin: effectLevelPin,
-  effectDepth: effectLevelDepth,
-  effectValue: effectLevelValue
+  imageUploadForm,
+  effectLevelPin,
+  effectLevelDepth,
+  effectLevelValue
 };

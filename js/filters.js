@@ -25,7 +25,7 @@ window.filters = {
       photos = shuffle(photos);
       photos.length = photos.length < COUNT_PHOTOS ? photos.length : COUNT_PHOTOS;
     } else if (filterDiscussed.classList.contains(`img-filters__button--active`)) {
-      photos.sort(function (left, right) {
+      photos.sort((left, right) => {
         return right.comments.length - left.comments.length;
       });
     }
