@@ -92,7 +92,7 @@ const successRender = (data) => {
 
 const errorRender = (errorMessage) => {
   window.form.renderResponse(
-      window.form.error,
+      window.form.errorTemplate,
       errorMessage, `ОК`
   );
 };
