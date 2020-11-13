@@ -93,8 +93,8 @@ const renderStartEffectLevel = () => {
 
 const removeAllImageEffects = () => {
   const effects = window.move.imageUploadForm.querySelectorAll(`input[type="radio"]`);
-  effects.forEach((item, i) => {
-    imageUploadPreview.classList.remove(`effects__preview--${effects[i].value}`);
+  effects.forEach((item) => {
+    imageUploadPreview.classList.remove(`effects__preview--${item.value}`);
   });
   imageUploadPreview.style.filter = ``;
 };

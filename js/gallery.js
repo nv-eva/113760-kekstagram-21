@@ -36,15 +36,15 @@ const onBigPictureCancelClick = () => {
 const renderPictures = (photos) => {
   const fragment = document.createDocumentFragment();
 
-  for (let i = 0; i < photos.length; i++) {
-    const currentPhoto = window.picture(photos[i]);
+  for (const photo of photos) {
+    const currentPhoto = window.picture(photo);
 
     currentPhoto.addEventListener(`click`, () => {
-      showBigPicture(photos[i]);
+      showBigPicture(photo);
     });
     currentPhoto.addEventListener(`keydown`, (evt) => {
       window.main.isEnterEvent(evt, () => {
-        showBigPicture(photos[i]);
+        showBigPicture(photo);
       });
     });
 
