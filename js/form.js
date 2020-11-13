@@ -223,22 +223,31 @@ const renderResponse = (template, messageText, buttonText) => {
   const responseMessage = template.cloneNode(true);
   const responseButton = responseMessage.querySelector(`button`);
 
-  const onResponseButtonClick = () => {
-    responseButton.removeEventListener(`click`, onResponseButtonClick);
-    document.removeEventListener(`click`, onResponseButtonClick);
-    responseMessage.remove();
-  };
-
   responseMessage.querySelector(`h2`).textContent = messageText;
   responseButton.textContent = buttonText;
 
+  const onResponseEscPress = (evt) => {
+    if (evt.key === `Escape`) {
+      evt.preventDefault();
+      onResponseButtonClick();
+    }
+  };
+
+  const onResponseButtonClick = () => {
+    responseButton.removeEventListener(`click`, onResponseButtonClick);
+    document.removeEventListener(`click`, onResponseButtonClick);
+    document.removeEventListener(`keydown`, onResponseEscPress);
+    responseMessage.remove();
+  };
+
   responseButton.addEventListener(`click`, onResponseButtonClick);
   document.addEventListener(`click`, onResponseButtonClick);
+  document.addEventListener(`keydown`, onResponseEscPress);
 
   document.querySelector(`main`).appendChild(responseMessage);
 };
 
-const successUploadForm = function () {
+const successUploadForm = () => {
   onUploadCancelClick();
   renderResponse(successTemplate, `Изображение успешно загружено`, `Круто!`);
 };
