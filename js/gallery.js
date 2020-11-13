@@ -74,7 +74,6 @@ const removeActiveClass = () => {
 
 const showFilters = () => {
   window.filters.image.classList.remove(`img-filters--inactive`);
-
   filtersForm.addEventListener(`click`, window.debounce(updatePhotos));
 
   filterButtons.forEach((item) => {
