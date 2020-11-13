@@ -2,6 +2,7 @@
 
 const photoListElement = document.querySelector(`.pictures`);
 const bigPictureCancel = window.preview.bigPicture.querySelector(`#picture-cancel`);
+const filtersForm = window.filters.image.querySelector(`.img-filters__form`);
 const filterButtons = window.filters.image.querySelectorAll(`.img-filters__button`);
 
 let userPhotos = [];
@@ -38,11 +39,11 @@ const renderPictures = (photos) => {
   for (let i = 0; i < photos.length; i++) {
     const currentPhoto = window.picture(photos[i]);
 
-    currentPhoto.addEventListener(`click`, function () {
+    currentPhoto.addEventListener(`click`, () => {
       showBigPicture(photos[i]);
     });
-    currentPhoto.addEventListener(`keydown`, function (evt) {
-      window.main.isEnterEvent(evt, function () {
+    currentPhoto.addEventListener(`keydown`, (evt) => {
+      window.main.isEnterEvent(evt, () => {
         showBigPicture(photos[i]);
       });
     });
@@ -73,13 +74,13 @@ const removeActiveClass = () => {
 
 const showFilters = () => {
   window.filters.image.classList.remove(`img-filters--inactive`);
+  filtersForm.addEventListener(`click`, window.debounce(updatePhotos));
 
   filterButtons.forEach((item) => {
-    item.addEventListener(`click`, window.debounce(() => {
+    item.addEventListener(`click`, () => {
       removeActiveClass();
       item.classList.add(`img-filters__button--active`);
-      updatePhotos();
-    }));
+    });
   });
 };
 
@@ -91,13 +92,13 @@ const successRender = (data) => {
 
 const errorRender = (errorMessage) => {
   window.form.renderResponse(
-      window.form.errorTemplate,
+      window.form.error,
       errorMessage, `ОК`
   );
 };
 
 bigPictureCancel.addEventListener(`click`, onBigPictureCancelClick);
-bigPictureCancel.addEventListener(`keydown`, function (evt) {
+bigPictureCancel.addEventListener(`keydown`, (evt) => {
   window.main.isEnterEvent(evt, onBigPictureCancelClick);
 });
 
