@@ -26,10 +26,10 @@ const scaleControlBigger = imageUpload.querySelector(`.scale__control--bigger`);
 const scaleControlValue = imageUpload.querySelector(`.scale__control--value`);
 const imageUploadPreview = imageUpload.querySelector(`.img-upload__preview img`);
 
-const uploadEffectLevel = window.move.imageUploadForm.querySelector(`.img-upload__effect-level`);
+const uploadEffectLevel = window.move.uploadForm.querySelector(`.img-upload__effect-level`);
 
-const textHashtags = window.move.imageUploadForm.querySelector(`.text__hashtags`);
-const textDescription = window.move.imageUploadForm.querySelector(`.text__description`);
+const textHashtags = window.move.uploadForm.querySelector(`.text__hashtags`);
+const textDescription = window.move.uploadForm.querySelector(`.text__description`);
 
 const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`).cloneNode(true);
 const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true);
@@ -86,13 +86,13 @@ const onScaleControlBiggerClick = () => {
 // Применяет эффекты к изображению
 const renderStartEffectLevel = () => {
   effectValue = START_EFFECT_VALUE;
-  window.move.effectLevelValue.value = effectValue;
-  window.move.effectLevelDepth.style.width = effectValue + `%`;
-  window.move.effectLevelPin.style.left = effectValue + `%`;
+  window.move.effectValue.value = effectValue;
+  window.move.effectDepth.style.width = effectValue + `%`;
+  window.move.effectPin.style.left = effectValue + `%`;
 };
 
 const removeAllImageEffects = () => {
-  const effects = window.move.imageUploadForm.querySelectorAll(`input[type="radio"]`);
+  const effects = window.move.uploadForm.querySelectorAll(`input[type="radio"]`);
   effects.forEach((item, i) => {
     imageUploadPreview.classList.remove(`effects__preview--${effects[i].value}`);
   });
@@ -114,7 +114,7 @@ const onEffectsChange = (evt) => {
 };
 
 const changeEffectValue = () => {
-  effectValue = window.move.effectLevelValue.value;
+  effectValue = window.move.effectValue.value;
 
   let filter = ``;
   let unit = ``;
@@ -219,7 +219,7 @@ const onUploadCancelClick = () => {
 
 
 // Отправляет данные с формы на сервер
-const renderResponse = (template, messageText, buttonText) => {
+const renderBackendResponse = (template, messageText, buttonText) => {
   const responseMessage = template.cloneNode(true);
   const responseButton = responseMessage.querySelector(`button`);
 
@@ -249,12 +249,12 @@ const renderResponse = (template, messageText, buttonText) => {
 
 const successUploadForm = () => {
   onUploadCancelClick();
-  renderResponse(successTemplate, `Изображение успешно загружено`, `Круто!`);
+  renderBackendResponse(successTemplate, `Изображение успешно загружено`, `Круто!`);
 };
 
 const errorUploadForm = (errorMessage) => {
   onUploadCancelClick();
-  renderResponse(errorTemplate, errorMessage, `Попробовать загрузить другой файл`
+  renderBackendResponse(errorTemplate, errorMessage, `Попробовать загрузить другой файл`
   );
 };
 
@@ -262,7 +262,7 @@ const onFormSubmit = (evt) => {
   evt.preventDefault();
   onHashtagsInput();
   onDescriptionInput();
-  window.backend.upload(new FormData(window.move.imageUploadForm), successUploadForm, errorUploadForm);
+  window.backend.upload(new FormData(window.move.uploadForm), successUploadForm, errorUploadForm);
 };
 
 
@@ -276,15 +276,13 @@ scaleControlValue.addEventListener(`keydown`, function (evt) {
   window.main.isRightEvent(evt, onScaleControlBiggerClick);
 });
 
-window.move.imageUploadForm.addEventListener(`change`, onEffectsChange);
-
-window.move.effectLevelPin.addEventListener(`mousedown`, function (evt) {
+window.move.effectPin.addEventListener(`mousedown`, function (evt) {
   window.move.onMouseDown(evt, changeEffectValue);
 });
-window.move.effectLevelPin.addEventListener(`keydown`, function (evt) {
+window.move.effectPin.addEventListener(`keydown`, function (evt) {
   window.move.onArrowLeft(evt, changeEffectValue);
 });
-window.move.effectLevelPin.addEventListener(`keydown`, function (evt) {
+window.move.effectPin.addEventListener(`keydown`, function (evt) {
   window.move.onArrowRight(evt, changeEffectValue);
 });
 
@@ -298,8 +296,10 @@ uploadCancel.addEventListener(`keydown`, function (evt) {
   window.main.isEnterEvent(evt, onUploadCancelClick);
 });
 
-window.move.imageUploadForm.addEventListener(`submit`, onFormSubmit);
+window.move.uploadForm.addEventListener(`change`, onEffectsChange);
+window.move.uploadForm.addEventListener(`submit`, onFormSubmit);
 
-window.form = {};
-window.form.errorTemplate = errorTemplate;
-window.form.renderResponse = renderResponse;
+window.form = {
+  error: errorTemplate,
+  renderResponse: renderBackendResponse
+};

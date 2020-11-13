@@ -65,10 +65,10 @@ window.move = {
       pinArrowMove(Number(effectLevelValue.value) - 10);
       action();
     }
-  }
-};
+  },
 
-window.move.imageUploadForm = imageUploadForm;
-window.move.effectLevelPin = effectLevelPin;
-window.move.effectLevelDepth = effectLevelDepth;
-window.move.effectLevelValue = effectLevelValue;
+  uploadForm: imageUploadForm,
+  effectPin: effectLevelPin,
+  effectDepth: effectLevelDepth,
+  effectValue: effectLevelValue
+};

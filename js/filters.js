@@ -30,7 +30,7 @@ window.filters = {
       });
     }
     return photos;
-  }
-};
+  },
 
-window.filters.image = imageFilters;
+  image: imageFilters
+};
