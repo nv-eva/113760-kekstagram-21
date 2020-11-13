@@ -99,6 +99,17 @@ const removeAllImageEffects = () => {
   imageUploadPreview.style.filter = ``;
 };
 
+const renderStartImageEffects = () => {
+  scaleValue = startEffectValue;
+  changeScale();
+
+  renderStartEffectLevel();
+  removeAllImageEffects();
+  imageUpload.querySelector(`[name=effect]`).checked = `none`;
+  imageUploadPreview.classList.add(`effects__preview--none`);
+  uploadEffectLevel.classList.add(`hidden`);
+};
+
 const onEffectsChange = (evt) => {
   if (evt.target.matches(`input[type="radio"]`)) {
     renderStartEffectLevel();
@@ -199,15 +210,7 @@ const onFileLoad = () => {
   imageUploadOverlay.classList.remove(`hidden`);
   document.addEventListener(`keydown`, onPopupEscPress);
   window.main.fixBody();
-
-  scaleValue = startEffectValue;
-  changeScale();
-
-  renderStartEffectLevel();
-  removeAllImageEffects();
-  imageUpload.querySelector(`[name=effect]`).checked = `none`;
-  imageUploadPreview.classList.add(`effects__preview--none`);
-  uploadEffectLevel.classList.add(`hidden`);
+  renderStartImageEffects();
 };
 
 const onUploadCancelClick = () => {
