@@ -12,7 +12,7 @@ const getBackendResponse = (onLoad, onError, method, url, data) => {
   const xhr = new XMLHttpRequest();
   xhr.responseType = `json`;
 
-  xhr.addEventListener(`load`, function () {
+  xhr.addEventListener(`load`, () => {
     if (xhr.status === StatusCode.OK) {
       onLoad(xhr.response);
     } else {
@@ -20,10 +20,10 @@ const getBackendResponse = (onLoad, onError, method, url, data) => {
     }
   });
 
-  xhr.addEventListener(`error`, function () {
+  xhr.addEventListener(`error`, () => {
     onError(`Произошла ошибка соединения`);
   });
-  xhr.addEventListener(`timeout`, function () {
+  xhr.addEventListener(`timeout`, () => {
     onError(`Запрос не успел выполниться за\u00A0${xhr.timeout}\u00A0мс`);
   });
 

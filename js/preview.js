@@ -69,7 +69,7 @@ window.preview = {
     const loadComments = photo.comments.slice();
 
     updateComments(loadComments, countComments);
-    loaderComments.addEventListener(`click`, function () {
+    loaderComments.addEventListener(`click`, () => {
       updateComments(loadComments, countComments);
     });
   },

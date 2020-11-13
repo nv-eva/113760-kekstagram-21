@@ -9,7 +9,7 @@ window.debounce = (cb) => {
     if (lastTimeout) {
       return;
     }
-    lastTimeout = window.setTimeout(function () {
+    lastTimeout = window.setTimeout(() => {
       cb(...parameters);
       window.clearTimeout(lastTimeout);
       lastTimeout = null;

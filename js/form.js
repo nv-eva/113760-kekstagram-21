@@ -267,22 +267,22 @@ const onFormSubmit = (evt) => {
 
 
 scaleControlSmaller.addEventListener(`click`, onScaleControlSmallerClick);
-scaleControlValue.addEventListener(`keydown`, function (evt) {
+scaleControlValue.addEventListener(`keydown`, (evt) => {
   window.main.isLeftEvent(evt, onScaleControlSmallerClick);
 });
 
 scaleControlBigger.addEventListener(`click`, onScaleControlBiggerClick);
-scaleControlValue.addEventListener(`keydown`, function (evt) {
+scaleControlValue.addEventListener(`keydown`, (evt) => {
   window.main.isRightEvent(evt, onScaleControlBiggerClick);
 });
 
-window.move.effectPin.addEventListener(`mousedown`, function (evt) {
+window.move.effectPin.addEventListener(`mousedown`, (evt) => {
   window.move.onMouseDown(evt, changeEffectValue);
 });
-window.move.effectPin.addEventListener(`keydown`, function (evt) {
+window.move.effectPin.addEventListener(`keydown`, (evt) => {
   window.move.onArrowLeft(evt, changeEffectValue);
 });
-window.move.effectPin.addEventListener(`keydown`, function (evt) {
+window.move.effectPin.addEventListener(`keydown`, (evt) => {
   window.move.onArrowRight(evt, changeEffectValue);
 });
 
@@ -292,7 +292,7 @@ textDescription.addEventListener(`input`, onDescriptionInput);
 uploadOpenFile.addEventListener(`change`, onFileLoad);
 
 uploadCancel.addEventListener(`click`, onUploadCancelClick);
-uploadCancel.addEventListener(`keydown`, function (evt) {
+uploadCancel.addEventListener(`keydown`, (evt) => {
   window.main.isEnterEvent(evt, onUploadCancelClick);
 });
 

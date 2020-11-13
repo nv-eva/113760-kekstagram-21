@@ -38,11 +38,11 @@ const renderPictures = (photos) => {
   for (let i = 0; i < photos.length; i++) {
     const currentPhoto = window.picture(photos[i]);
 
-    currentPhoto.addEventListener(`click`, function () {
+    currentPhoto.addEventListener(`click`, () => {
       showBigPicture(photos[i]);
     });
-    currentPhoto.addEventListener(`keydown`, function (evt) {
-      window.main.isEnterEvent(evt, function () {
+    currentPhoto.addEventListener(`keydown`, (evt) => {
+      window.main.isEnterEvent(evt, () => {
         showBigPicture(photos[i]);
       });
     });
@@ -97,7 +97,7 @@ const errorRender = (errorMessage) => {
 };
 
 bigPictureCancel.addEventListener(`click`, onBigPictureCancelClick);
-bigPictureCancel.addEventListener(`keydown`, function (evt) {
+bigPictureCancel.addEventListener(`keydown`, (evt) => {
   window.main.isEnterEvent(evt, onBigPictureCancelClick);
 });
 
